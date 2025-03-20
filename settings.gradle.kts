@@ -24,3 +24,6 @@ rootProject.name = "yatzee"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
 include(":feature:main")
+include(":core:navigation")
+include(":core:designsystem")
+include(":feature:home")

@@ -1,4 +1,4 @@
-package com.bongpal.yatzee.ui.theme
+package com.bongpal.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 

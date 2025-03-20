@@ -3,5 +3,9 @@ plugins {
 }
 
 android{
-    namespace = "com.yatzee.app"
+    namespace = "com.bongpal.yatzee.app"
+}
+
+dependencies {
+    implementation(projects.feature.main)
 }
