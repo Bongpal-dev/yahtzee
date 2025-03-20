@@ -1,7 +1,7 @@
 import com.bongpal.yatzee.setNamespace
 
 plugins {
-    id("yatzee.android.feature")
+    alias(libs.plugins.yatzee.android.feature)
 }
 
 setNamespace("feature.home")

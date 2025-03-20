@@ -1,5 +1,5 @@
 plugins {
-    id("yatzee.android.application")
+    alias(libs.plugins.yatzee.android.application)
 }
 
 android{
