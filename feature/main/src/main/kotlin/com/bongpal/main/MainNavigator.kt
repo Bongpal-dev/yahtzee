@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.bongpal.home.navigation.navigateHome
 import com.bongpal.navigation.Route
+import com.bongpal.play.navigation.navigatePlay
 
 internal class MainNavigator(
     val navController: NavHostController,
@@ -29,6 +30,10 @@ internal class MainNavigator(
 
     fun navigateHome() {
         navController.navigateHome(navOptions)
+    }
+
+    fun navigatePlay() {
+        navController.navigatePlay(navOptions)
     }
 }
 

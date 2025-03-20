@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import com.bongpal.home.navigation.homeNavGraph
 import com.bongpal.main.MainNavigator
+import com.bongpal.play.navigation.playNavGraph
 
 @Composable
 internal fun MainNavHost(
@@ -27,6 +28,11 @@ internal fun MainNavHost(
             startDestination = navigator.startDestination
         ) {
             homeNavGraph(
+                navigateToPlay = navigator::navigatePlay,
+                paddingValues = paddingValues
+            )
+
+            playNavGraph(
                 paddingValues = paddingValues
             )
         }

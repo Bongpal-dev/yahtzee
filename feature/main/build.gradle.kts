@@ -23,4 +23,5 @@ android {
 
 dependencies {
     implementation(projects.feature.home)
+    implementation(projects.feature.play)
 }
