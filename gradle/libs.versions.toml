@@ -108,3 +108,4 @@ yatzee-android-application = { id = "yatzee.android.application" }
 yatzee-android-feature = { id = "yatzee.android.feature" }
 yatzee-android-library = { id = "yatzee.android.library" }
 yatzee-android-compose = { id = "yatzee.android.compose" }
+yatzee-kotlin-library = {id = "yatzee.kotlin.library"}
