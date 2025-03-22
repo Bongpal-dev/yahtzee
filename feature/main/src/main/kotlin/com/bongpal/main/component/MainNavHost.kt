@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import com.bongpal.home.navigation.homeNavGraph
 import com.bongpal.main.MainNavigator
 import com.bongpal.play.navigation.playNavGraph
+import com.bongpal.result.navigation.resultNavGraph
 
 @Composable
 internal fun MainNavHost(
@@ -33,6 +34,12 @@ internal fun MainNavHost(
             )
 
             playNavGraph(
+                navigateToResult = navigator::navigateResult,
+                paddingValues = paddingValues
+            )
+
+            resultNavGraph(
+                navigateToHome = navigator::navigateHome,
                 paddingValues = paddingValues
             )
         }

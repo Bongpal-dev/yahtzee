@@ -11,6 +11,7 @@ import androidx.navigation.navOptions
 import com.bongpal.home.navigation.navigateHome
 import com.bongpal.navigation.Route
 import com.bongpal.play.navigation.navigatePlay
+import com.bongpal.result.navigation.navigateResult
 
 internal class MainNavigator(
     val navController: NavHostController,
@@ -34,6 +35,10 @@ internal class MainNavigator(
 
     fun navigatePlay() {
         navController.navigatePlay(navOptions)
+    }
+
+    fun navigateResult(finalScore: Int) {
+        navController.navigateResult(finalScore, navOptions)
     }
 }
 

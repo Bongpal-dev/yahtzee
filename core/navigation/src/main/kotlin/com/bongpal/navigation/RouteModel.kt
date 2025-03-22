@@ -7,8 +7,8 @@ sealed interface Route {
     data object Home : Route
 
     @Serializable
-    data object Play: Route
+    data object Play : Route
 
     @Serializable
-    data object Result: Route
+    data class Result(val finalScore: Int) : Route
 }

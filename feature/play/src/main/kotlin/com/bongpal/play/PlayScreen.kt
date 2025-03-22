@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,24 +32,26 @@ import com.bongpal.play.model.UPPER
 
 @Composable
 internal fun PlayRoute(
+    navigateToResult: (Int) -> Unit,
     paddingValues: PaddingValues,
     viewModel: PlayViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val diceState = uiState.dices
-    val rollingState = uiState.isRolling
-    val upperScores = uiState.scores.filter { it.category.section == UPPER }
-    val lowerScores = uiState.scores.filter { it.category.section == LOWER }
-    val upperScore = uiState.upperScore
-    val finalScore = uiState.finalScore
+
+    LaunchedEffect(uiState.isEnd) {
+        if (uiState.isEnd) {
+            navigateToResult(uiState.finalScore)
+        }
+    }
 
     PlayScreen(
-        dices = diceState,
-        rollingState = rollingState,
-        upperScores = upperScores,
-        lowerScores = lowerScores,
-        upperScore = upperScore,
-        finalScore = finalScore,
+        dices = uiState.dices,
+        rollingState = uiState.isRolling,
+        rollCount = uiState.rollCount,
+        upperScores = uiState.scores.filter { it.category.section == UPPER },
+        lowerScores = uiState.scores.filter { it.category.section == LOWER },
+        upperScore = uiState.upperSectionScore,
+        finalScore = uiState.finalScore,
         rollDice = viewModel::rollDice,
         holdDice = viewModel::holdDice,
         selectScore = viewModel::selectScore,
@@ -61,6 +64,7 @@ internal fun PlayRoute(
 private fun PlayScreen(
     dices: List<Dice> = emptyList(),
     rollingState: Boolean = false,
+    rollCount: Int = 0,
     upperScores: List<Score> = emptyList(),
     lowerScores: List<Score> = emptyList(),
     upperScore: Int = 0,
@@ -208,6 +212,7 @@ private fun PlayScreen(
             horizontalArrangement = Arrangement.Center
         ) {
             TextButton(
+                enabled = rollCount < 3,
                 onClick = {
                     if (dices.any { it.isHeld.not() } || dices.isEmpty()) rollDice()
                 }

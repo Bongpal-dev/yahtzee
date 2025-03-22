@@ -8,14 +8,7 @@ plugins {
 
 android {
     setNamespace("feature.main")
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
 
-    }
     buildFeatures {
         compose = true
     }
@@ -24,4 +17,5 @@ android {
 dependencies {
     implementation(projects.feature.home)
     implementation(projects.feature.play)
+    implementation(projects.feature.result)
 }

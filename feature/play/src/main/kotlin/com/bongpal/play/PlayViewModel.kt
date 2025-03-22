@@ -16,9 +16,11 @@ import javax.inject.Inject
 data class PlayUiState(
     val dices: List<Dice> = emptyList(),
     val isRolling: Boolean = false,
-    val upperScore: Int = 0,
+    val rollCount: Int = 0,
+    val upperSectionScore: Int = 0,
     val scores: List<Score> = ScoreCategory.entries.map { Score(it) },
     val finalScore: Int = 0,
+    val isEnd: Boolean = false
 )
 
 @HiltViewModel
@@ -44,6 +46,7 @@ class PlayViewModel @Inject constructor() : ViewModel() {
         _uiState.update { state ->
             state.copy(
                 dices = dices,
+                rollCount = state.rollCount + 1,
                 scores = state.scores.map { it.copy(isSelected = false) }
             )
         }
@@ -76,29 +79,31 @@ class PlayViewModel @Inject constructor() : ViewModel() {
     fun pickScore(score: Score) {
         _uiState.update { state ->
             val upperScore =
-                state.upperScore + if (score.category.section == UPPER) score.point else 0
+                state.upperSectionScore + if (score.category.section == UPPER) score.point else 0
+            val newScores = state.scores.map { s ->
+                if (s.category == score.category && s.isPicked.not()) {
+                    s.copy(
+                        isPicked = true,
+                        isSelected = false
+                    )
+                } else {
+                    if (s.isPicked) {
+                        s.copy(isSelected = false)
+                    } else {
+                        s.copy(
+                            point = 0,
+                            isSelected = false
+                        )
+                    }
+                }
+            }
 
             state.copy(
                 dices = emptyList(),
-                scores = state.scores.map { s ->
-                    if (s.category == score.category && s.isPicked.not()) {
-                        s.copy(
-                            isPicked = true,
-                            isSelected = false
-                        )
-                    } else {
-                        if (s.isPicked) {
-                            s.copy(isSelected = false)
-                        } else {
-                            s.copy(
-                                point = 0,
-                                isSelected = false
-                            )
-                        }
-                    }
-                },
-                upperScore = upperScore,
-                finalScore = state.finalScore + score.point + if (upperScore >= 63) 35 else 0
+                scores = newScores,
+                upperSectionScore = upperScore,
+                finalScore = state.finalScore + score.point + if (upperScore >= 63) 35 else 0,
+                isEnd = newScores.all { it.isPicked }
             )
         }
     }

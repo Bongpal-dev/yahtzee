@@ -13,10 +13,12 @@ fun NavController.navigatePlay(navOptions: NavOptions) {
 }
 
 fun NavGraphBuilder.playNavGraph(
+    navigateToResult: (Int) -> Unit,
     paddingValues: PaddingValues
 ) {
     composable<Route.Play> {
         PlayRoute(
+            navigateToResult = navigateToResult,
             paddingValues = paddingValues
         )
     }
