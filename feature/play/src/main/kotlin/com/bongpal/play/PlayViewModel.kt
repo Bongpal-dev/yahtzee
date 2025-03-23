@@ -3,6 +3,7 @@ package com.bongpal.play
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bongpal.play.model.Dice
+import com.bongpal.play.model.Score
 import com.bongpal.play.model.ScoreCategory
 import com.bongpal.play.model.UPPER
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -101,6 +102,7 @@ class PlayViewModel @Inject constructor() : ViewModel() {
             state.copy(
                 dices = emptyList(),
                 scores = newScores,
+                rollCount = 0,
                 upperSectionScore = upperScore,
                 finalScore = state.finalScore + score.point + if (upperScore >= 63) 35 else 0,
                 isEnd = newScores.all { it.isPicked }
@@ -110,6 +112,7 @@ class PlayViewModel @Inject constructor() : ViewModel() {
 
     private fun updateScore(dices: List<Dice>) {
         val count = dices.groupingBy { it.value }.eachCount()
+
         _uiState.update { state ->
             val scores = state.scores.map { score ->
                 if (score.isPicked) return@map score
@@ -205,10 +208,3 @@ class PlayViewModel @Inject constructor() : ViewModel() {
         }
     }
 }
-
-data class Score(
-    val category: ScoreCategory,
-    val point: Int = 0,
-    val isSelected: Boolean = false,
-    val isPicked: Boolean = false,
-)

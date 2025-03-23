@@ -25,9 +25,9 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import com.bongpal.common.resize
 import com.bongpal.play.model.Dice
 import com.bongpal.play.util.getDiceImages
-import com.bongpal.play.util.resize
 import kotlinx.coroutines.delay
 
 @Composable
@@ -37,7 +37,6 @@ internal fun DiceSection(
     holdDice: (Int) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
-    // 주사위 이미지 리소스들을 가져옵니다.
     val diceResources = getDiceImages()
 
     BoxWithConstraints(
@@ -96,7 +95,12 @@ internal fun DiceSection(
                             localHeight = it.height
                         }
                 ) {
-                    val resizedImage = remember(localWidth, localHeight, diceImage) { diceImage.resize(localWidth, localHeight) }
+                    val resizedImage = remember(localWidth, localHeight, diceImage) {
+                        diceImage.resize(
+                            localWidth,
+                            localHeight
+                        )
+                    }
 
                     Box(
                         modifier = Modifier

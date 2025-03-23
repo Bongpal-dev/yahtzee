@@ -1,10 +1,7 @@
 package com.bongpal.play.util
 
-import android.graphics.Bitmap
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.imageResource
 import com.bongpal.play.model.ScoreCategory
 import com.bongpal.yatzee.feature.play.R
@@ -34,7 +31,8 @@ internal fun Int.getDiceImage(): ImageBitmap {
     }
 }
 
-@Composable fun ScoreCategory.getScoreImage(): ImageBitmap {
+@Composable
+fun ScoreCategory.getScoreImage(): ImageBitmap {
     return when (this) {
         ScoreCategory.ACES -> ImageBitmap.imageResource(R.drawable.img_dice_default_1)
         ScoreCategory.TWOS -> ImageBitmap.imageResource(R.drawable.img_dice_default_2)
@@ -50,10 +48,4 @@ internal fun Int.getDiceImage(): ImageBitmap {
         ScoreCategory.CHANCE -> ImageBitmap.imageResource(R.drawable.img_chance)
         ScoreCategory.YAHTZEE -> ImageBitmap.imageResource(R.drawable.img_yahtzee)
     }
-}
-
-internal fun ImageBitmap.resize(newWidth: Int, newHeight: Int): ImageBitmap {
-    val prev = Bitmap.createBitmap(this.asAndroidBitmap())
-    this.prepareToDraw()
-    return Bitmap.createScaledBitmap(prev, newWidth, newHeight, true).asImageBitmap()
 }

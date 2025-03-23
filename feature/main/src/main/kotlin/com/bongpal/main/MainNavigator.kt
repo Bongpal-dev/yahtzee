@@ -21,11 +21,8 @@ internal class MainNavigator(
     val startDestination = Route.Home
     private val navOptions by lazy {
         navOptions {
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
-            }
+            popUpTo(navController.graph.findStartDestination().id)
             launchSingleTop = true
-            restoreState = true
         }
     }
 
@@ -34,7 +31,7 @@ internal class MainNavigator(
     }
 
     fun navigatePlay() {
-        navController.navigatePlay(navOptions)
+        navController.navigatePlay()
     }
 
     fun navigateResult(finalScore: Int) {

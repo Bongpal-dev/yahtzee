@@ -5,8 +5,4 @@ plugins {
     alias(libs.plugins.yatzee.android.compose)
 }
 
-setNamespace("core.designsystem")
-
-dependencies {
-    implementation(projects.core.common)
-}
+setNamespace("core.common")

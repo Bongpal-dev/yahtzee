@@ -13,22 +13,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bongpal.designsystem.component.ImageButton
 import com.bongpal.designsystem.theme.Typography
 import com.bongpal.play.component.DiceSection
 import com.bongpal.play.component.ScoreButton
 import com.bongpal.play.model.Dice
 import com.bongpal.play.model.LOWER
+import com.bongpal.play.model.Score
 import com.bongpal.play.model.UPPER
+import com.bongpal.yatzee.feature.play.R
 
 @Composable
 internal fun PlayRoute(
@@ -79,8 +82,8 @@ private fun PlayScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingValues)
-            .padding(top = 40.dp, start = 32.dp, end = 32.dp),
-        verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.Top),
+            .padding(24.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
@@ -109,6 +112,7 @@ private fun PlayScreen(
                         ScoreButton(
                             score = score,
                             selectScore = selectScore,
+                            pickScore = pickScore,
                             selectable = dices.isNotEmpty(),
                             rollingState = rollingState,
                             modifier = Modifier
@@ -163,6 +167,7 @@ private fun PlayScreen(
                         ScoreButton(
                             score = score,
                             selectScore = selectScore,
+                            pickScore = pickScore,
                             selectable = dices.isNotEmpty(),
                             rollingState = rollingState,
                             modifier = Modifier
@@ -180,6 +185,7 @@ private fun PlayScreen(
 
         Row(
             modifier = Modifier
+                .fillMaxWidth()
                 .fillMaxHeight(0.12f),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.End)
@@ -193,7 +199,6 @@ private fun PlayScreen(
                 text = "$finalScore 점",
                 color = Color.Gray,
                 style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.weight(1f),
             )
         }
 
@@ -206,38 +211,18 @@ private fun PlayScreen(
 
         Spacer(modifier = Modifier.size(20.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            TextButton(
-                enabled = rollCount < 3,
-                onClick = {
-                    if (dices.any { it.isHeld.not() } || dices.isEmpty()) rollDice()
-                }
-            ) {
-                Text(
-                    text = "Roll",
-                    style = MaterialTheme.typography.headlineLarge,
-                )
+        ImageButton(
+            painter = painterResource(R.drawable.btn_roll_default),
+            pressedPainter = painterResource(R.drawable.btn_roll_pressed),
+            disabledPainter = painterResource(R.drawable.btn_roll_default_disable),
+            disabledPressedPainter = painterResource(R.drawable.btn_roll_pressed_disable),
+            enabled = rollCount < 3,
+            contentDescription = "주사위 굴림 버튼",
+            modifier = Modifier.weight(1f),
+            onClick = {
+                if (dices.any { it.isHeld.not() } || dices.isEmpty()) rollDice()
             }
-
-            TextButton(
-                onClick = {
-                    (lowerScores + upperScores).let { scores ->
-                        if (scores.any { it.isSelected }) {
-                            pickScore(scores.find { it.isSelected } ?: return@let)
-                        }
-                    }
-                }
-            ) {
-                Text(
-                    text = "Pick",
-                    style = MaterialTheme.typography.headlineLarge,
-                )
-            }
-        }
+        )
     }
 }
 
