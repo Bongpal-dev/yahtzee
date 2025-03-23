@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.bongpal.play.model.Dice
 import com.bongpal.play.model.Score
 import com.bongpal.play.model.ScoreCategory
-import com.bongpal.play.model.UPPER
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +27,8 @@ data class PlayUiState(
 class PlayViewModel @Inject constructor() : ViewModel() {
     private val _uiState = MutableStateFlow(PlayUiState())
     val uiState = _uiState.asStateFlow()
+
+    private var upperBonus = false
 
     fun rollDice() {
         viewModelScope.launch {
@@ -79,8 +80,7 @@ class PlayViewModel @Inject constructor() : ViewModel() {
 
     fun pickScore(score: Score) {
         _uiState.update { state ->
-            val upperScore =
-                state.upperSectionScore + if (score.category.section == UPPER) score.point else 0
+            val upperScore = state.upperSectionScore + if (score.isUpper()) score.point else 0
             val newScores = state.scores.map { s ->
                 if (s.category == score.category && s.isPicked.not()) {
                     s.copy(
@@ -98,13 +98,17 @@ class PlayViewModel @Inject constructor() : ViewModel() {
                     }
                 }
             }
+            val bonus = if (upperScore >= 63 && upperBonus.not()) {
+                upperBonus = true
+                35
+            } else 0
 
             state.copy(
                 dices = emptyList(),
                 scores = newScores,
                 rollCount = 0,
                 upperSectionScore = upperScore,
-                finalScore = state.finalScore + score.point + if (upperScore >= 63) 35 else 0,
+                finalScore = state.finalScore + score.point + bonus,
                 isEnd = newScores.all { it.isPicked }
             )
         }

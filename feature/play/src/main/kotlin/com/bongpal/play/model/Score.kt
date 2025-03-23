@@ -5,4 +5,6 @@ data class Score(
     val point: Int = 0,
     val isSelected: Boolean = false,
     val isPicked: Boolean = false,
-)
+) {
+    fun isUpper() = category.section == UPPER
+}
