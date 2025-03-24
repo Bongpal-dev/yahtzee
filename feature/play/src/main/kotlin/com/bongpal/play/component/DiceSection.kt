@@ -89,7 +89,7 @@ internal fun DiceSection(
 
                 Box(
                     modifier = Modifier
-                        .size(diceSide) // 정사각형으로, 계산된 diceSide 적용
+                        .size(diceSide)
                         .onSizeChanged {
                             localWidth = it.width
                             localHeight = it.height

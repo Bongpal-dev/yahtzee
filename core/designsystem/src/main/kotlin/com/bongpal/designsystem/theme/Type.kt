@@ -5,7 +5,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.sp
 import com.bongpal.yatzee.core.designsystem.R
@@ -13,6 +12,7 @@ import com.bongpal.yatzee.core.designsystem.R
 private val DoodleDefault = TextStyle.Default.copy(
     fontFamily = FontFamily(Font(R.font.man_seh)),
     fontWeight = FontWeight.Black,
+    color = DefaultGray,
     lineHeightStyle = LineHeightStyle(
         alignment = LineHeightStyle.Alignment.Center,
         trim = LineHeightStyle.Trim.None
@@ -27,6 +27,9 @@ val Typography = Typography(
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
+    ),
+    headlineLarge = DoodleDefault.copy(
+        fontSize = 40.sp,
     ),
     headlineMedium = DoodleDefault.copy(
         fontSize = 24.sp

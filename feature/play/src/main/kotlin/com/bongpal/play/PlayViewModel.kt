@@ -31,6 +31,8 @@ class PlayViewModel @Inject constructor() : ViewModel() {
     private var upperBonus = false
 
     fun rollDice() {
+        if (uiState.value.isRolling) return
+        
         viewModelScope.launch {
             _uiState.update { state -> state.copy(isRolling = true) }
             delay(700)
@@ -110,6 +112,15 @@ class PlayViewModel @Inject constructor() : ViewModel() {
                 upperSectionScore = upperScore,
                 finalScore = state.finalScore + score.point + bonus,
                 isEnd = newScores.all { it.isPicked }
+            )
+        }
+    }
+
+    fun test() {
+        _uiState.update { state ->
+            state.copy(
+                finalScore = (0..375).random(),
+                isEnd = true
             )
         }
     }
