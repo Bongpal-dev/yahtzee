@@ -19,7 +19,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -212,12 +213,11 @@ private fun PlayScreen(
         Spacer(modifier = Modifier.size(20.dp))
 
         ImageButton(
-            painter = painterResource(R.drawable.btn_roll_default),
-            pressedPainter = painterResource(R.drawable.btn_roll_pressed),
-            disabledPainter = painterResource(R.drawable.btn_roll_default_disable),
-            disabledPressedPainter = painterResource(R.drawable.btn_roll_pressed_disable),
+            bitmap = ImageBitmap.imageResource(R.drawable.btn_roll_default),
+            pressedBitmap = ImageBitmap.imageResource(R.drawable.btn_roll_pressed),
+            disabledBitmap = ImageBitmap.imageResource(R.drawable.btn_roll_default_disable),
+            disabledPressedBitmap = ImageBitmap.imageResource(R.drawable.btn_roll_pressed_disable),
             enabled = rollCount < 3,
-            contentDescription = "주사위 굴림 버튼",
             modifier = Modifier.weight(1f),
             onClick = {
                 if (dices.any { it.isHeld.not() } || dices.isEmpty()) rollDice()
