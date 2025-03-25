@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -35,11 +36,12 @@ fun TierIcon(
                 imgHeight = it.height
             }
     ) {
-        val resizedImage =
-            remember(imgWidth, imgHeight, tierIconRes) { tierIconRes.resize(imgWidth, imgHeight) }
+        val resizedImage by produceState<ImageBitmap?>(
+            initialValue = null, key1 = imgWidth, key2 = imgHeight, key3 = tierIconRes
+        ) { value = tierIconRes.resize(imgWidth, imgHeight) }
 
         Image(
-            bitmap = resizedImage,
+            bitmap = resizedImage ?: return,
             contentDescription = null,
             modifier = Modifier.fillMaxSize()
         )

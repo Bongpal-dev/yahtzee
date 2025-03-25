@@ -32,7 +32,7 @@ class PlayViewModel @Inject constructor() : ViewModel() {
 
     fun rollDice() {
         if (uiState.value.isRolling) return
-        
+
         viewModelScope.launch {
             _uiState.update { state -> state.copy(isRolling = true) }
             delay(700)
@@ -116,12 +116,9 @@ class PlayViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun test() {
+    fun finishGame() {
         _uiState.update { state ->
-            state.copy(
-                finalScore = (0..375).random(),
-                isEnd = true
-            )
+            state.copy(isEnd = true)
         }
     }
 

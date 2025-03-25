@@ -1,5 +1,6 @@
 package com.bongpal.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -59,7 +60,10 @@ private fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             TextButton(
-                onClick = navigateToPlay
+                onClick = {
+                    navigateToPlay()
+                    Log.i("delay_test", "click start")
+                }
             ) {
                 Text(
                     text = "게임 시작",

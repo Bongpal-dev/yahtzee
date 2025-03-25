@@ -15,4 +15,5 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
     implementation(project(":core:ui"))
+    implementation(project(":core:domain"))
 }

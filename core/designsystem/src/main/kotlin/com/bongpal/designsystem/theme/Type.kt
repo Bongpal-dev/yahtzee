@@ -12,7 +12,7 @@ import com.bongpal.yatzee.core.designsystem.R
 private val DoodleDefault = TextStyle.Default.copy(
     fontFamily = FontFamily(Font(R.font.man_seh)),
     fontWeight = FontWeight.Black,
-    color = DefaultGray,
+    color = DefaultBlack,
     lineHeightStyle = LineHeightStyle(
         alignment = LineHeightStyle.Alignment.Center,
         trim = LineHeightStyle.Trim.None
@@ -29,15 +29,15 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     ),
     headlineLarge = DoodleDefault.copy(
-        fontSize = 40.sp,
+        fontSize = 36.sp,
     ),
     headlineMedium = DoodleDefault.copy(
-        fontSize = 24.sp
+        fontSize = 22.sp
     ),
     titleLarge = DoodleDefault.copy(
-        fontSize = 20.sp,
+        fontSize = 16.sp,
     ),
     labelSmall = DoodleDefault.copy(
-        fontSize = 16.sp
+        fontSize = 12.sp
     )
 )

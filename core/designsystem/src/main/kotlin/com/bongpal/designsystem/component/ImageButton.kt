@@ -1,27 +1,23 @@
 package com.bongpal.designsystem.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.layout.onSizeChanged
-import com.bongpal.common.resize
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun ImageButton(
-    bitmap: ImageBitmap,
-    pressedBitmap: ImageBitmap? = null,
-    disabledBitmap: ImageBitmap? = null,
-    disabledPressedBitmap: ImageBitmap? = null,
+    imageVector: ImageVector,
+    pressedImage: ImageVector? = null,
+    disabledImage: ImageVector? = null,
+    disabledPressedImage: ImageVector? = null,
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
@@ -29,27 +25,15 @@ fun ImageButton(
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
-    val normalBitmap = if (enabled) bitmap else disabledBitmap ?: bitmap
-    val pressedStateBitmap =
-        if (enabled) pressedBitmap ?: bitmap else disabledPressedBitmap ?: bitmap
+    val defaultButton = if (enabled) imageVector else disabledImage ?: imageVector
+    val pressedButton =
+        if (enabled) pressedImage ?: imageVector else disabledPressedImage ?: imageVector
 
-    val displayBitmap = if (isPressed) pressedStateBitmap else normalBitmap
-    val aspectRatio = displayBitmap.width.toFloat() / displayBitmap.height.toFloat()
-
-    var width by remember { mutableIntStateOf(1) }
-    var height by remember { mutableIntStateOf(1) }
-
-    val resizedImage = remember(width, height, displayBitmap) {
-        displayBitmap.resize(width, height)
-    }
-
-    Box(
+    Image(
+        imageVector = if (isPressed) pressedButton else defaultButton,
+        contentDescription = null,
         modifier = modifier
-            .aspectRatio(aspectRatio)
-            .onSizeChanged {
-                width = it.width
-                height = it.height
-            }
+            .height(52.dp)
             .clickable(
                 onClick = {
                     if (enabled) onClick()
@@ -57,8 +41,5 @@ fun ImageButton(
                 indication = null,
                 interactionSource = interactionSource
             )
-            .drawBehind {
-                drawImage(resizedImage)
-            }
     )
 }

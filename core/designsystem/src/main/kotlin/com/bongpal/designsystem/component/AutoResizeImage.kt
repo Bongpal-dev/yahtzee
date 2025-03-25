@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -33,11 +34,13 @@ fun AutoResizeImage(
                 height = it.height
             }
     ) {
-        val resizedImage = remember(width, height, bitmap) { bitmap.resize(width, height) }
+        val resizedImage by produceState<ImageBitmap?>(
+            initialValue = null, key1 = width, key2 = height, key3 = bitmap
+        ) { value = bitmap.resize(width, height) }
 
         Box(
             modifier = Modifier
-                .drawBehind { drawImage(resizedImage) }
+                .drawBehind { drawImage(resizedImage ?: return@drawBehind) }
         )
     }
 }

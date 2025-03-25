@@ -1,51 +1,131 @@
 package com.bongpal.play.util
 
+import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
+import com.bongpal.play.model.Score
 import com.bongpal.play.model.ScoreCategory
 import com.bongpal.yatzee.feature.play.R
 
 @Composable
-internal fun getDiceImages(): List<ImageBitmap> {
-    return listOf(
-        ImageBitmap.imageResource(R.drawable.img_dice_default_1),
-        ImageBitmap.imageResource(R.drawable.img_dice_default_2),
-        ImageBitmap.imageResource(R.drawable.img_dice_default_3),
-        ImageBitmap.imageResource(R.drawable.img_dice_default_4),
-        ImageBitmap.imageResource(R.drawable.img_dice_default_5),
-        ImageBitmap.imageResource(R.drawable.img_dice_default_6)
-    )
-}
+fun Score.getScoreImage(): ImageVector {
+    return when (category) {
+        ScoreCategory.ACES -> {
+            this.getImageWithState(
+                defaultResId = R.drawable.img_ace,
+                selectedResId = R.drawable.img_ace_selected,
+                pickedResId = R.drawable.img_ace_picked
+            )
+        }
 
-@Composable
-internal fun Int.getDiceImage(): ImageBitmap {
-    return when (this) {
-        1 -> ImageBitmap.imageResource(R.drawable.img_dice_default_1)
-        2 -> ImageBitmap.imageResource(R.drawable.img_dice_default_2)
-        3 -> ImageBitmap.imageResource(R.drawable.img_dice_default_3)
-        4 -> ImageBitmap.imageResource(R.drawable.img_dice_default_4)
-        5 -> ImageBitmap.imageResource(R.drawable.img_dice_default_5)
-        6 -> ImageBitmap.imageResource(R.drawable.img_dice_default_6)
-        else -> throw IllegalArgumentException("Invalid dice value: $this")
+        ScoreCategory.TWOS -> {
+            this.getImageWithState(
+                defaultResId = R.drawable.img_twos,
+                selectedResId = R.drawable.img_twos_selected,
+                pickedResId = R.drawable.img_twos_picked
+            )
+        }
+
+        ScoreCategory.THREES -> {
+            this.getImageWithState(
+                defaultResId = R.drawable.img_threes,
+                selectedResId = R.drawable.img_threes_selected,
+                pickedResId = R.drawable.img_threes_picked
+            )
+        }
+
+        ScoreCategory.FOURS -> {
+            this.getImageWithState(
+                defaultResId = R.drawable.img_fours,
+                selectedResId = R.drawable.img_fours_selected,
+                pickedResId = R.drawable.img_fours_picked
+            )
+        }
+
+        ScoreCategory.FIVES -> {
+            this.getImageWithState(
+                defaultResId = R.drawable.img_fives,
+                selectedResId = R.drawable.img_fives_selected,
+                pickedResId = R.drawable.img_fives_picked
+            )
+        }
+
+        ScoreCategory.SIXES -> {
+            this.getImageWithState(
+                defaultResId = R.drawable.img_sixes,
+                selectedResId = R.drawable.img_sixes_selected,
+                pickedResId = R.drawable.img_sixes_picked
+            )
+        }
+
+        ScoreCategory.THREE_OF_A_KIND -> {
+            this.getImageWithState(
+                defaultResId = R.drawable.img_three_kind,
+                selectedResId = R.drawable.img_three_kind_selected,
+                pickedResId = R.drawable.img_three_kind_picked
+            )
+        }
+
+        ScoreCategory.FOUR_OF_A_KIND -> {
+            this.getImageWithState(
+                defaultResId = R.drawable.img_four_kind,
+                selectedResId = R.drawable.img_four_kind_selected,
+                pickedResId = R.drawable.img_four_kind_picked
+            )
+        }
+
+        ScoreCategory.FULL_HOUSE -> {
+            this.getImageWithState(
+                defaultResId = R.drawable.img_full_house,
+                selectedResId = R.drawable.img_full_house_selected,
+                pickedResId = R.drawable.img_full_house_picked
+            )
+        }
+
+        ScoreCategory.SMALL_STRAIGHT -> {
+            this.getImageWithState(
+                defaultResId = R.drawable.img_small_straight,
+                selectedResId = R.drawable.img_small_straight_selected,
+                pickedResId = R.drawable.img_small_straight_picked
+            )
+        }
+
+        ScoreCategory.LARGE_STRAIGHT -> {
+            this.getImageWithState(
+                defaultResId = R.drawable.img_large_straight,
+                selectedResId = R.drawable.img_large_straight_selected,
+                pickedResId = R.drawable.img_large_straight_picked
+            )
+        }
+
+        ScoreCategory.CHANCE -> {
+            this.getImageWithState(
+                defaultResId = R.drawable.img_chance,
+                selectedResId = R.drawable.img_chance_selected,
+                pickedResId = R.drawable.img_chance_picked
+            )
+        }
+
+        ScoreCategory.YAHTZEE -> {
+            this.getImageWithState(
+                defaultResId = R.drawable.img_yahtzee,
+                selectedResId = R.drawable.img_yahtzee_selected,
+                pickedResId = R.drawable.img_yahtzee_picked
+            )
+        }
     }
 }
 
 @Composable
-fun ScoreCategory.getScoreImage(): ImageBitmap {
-    return when (this) {
-        ScoreCategory.ACES -> ImageBitmap.imageResource(R.drawable.img_dice_default_1)
-        ScoreCategory.TWOS -> ImageBitmap.imageResource(R.drawable.img_dice_default_2)
-        ScoreCategory.THREES -> ImageBitmap.imageResource(R.drawable.img_dice_default_3)
-        ScoreCategory.FOURS -> ImageBitmap.imageResource(R.drawable.img_dice_default_4)
-        ScoreCategory.FIVES -> ImageBitmap.imageResource(R.drawable.img_dice_default_5)
-        ScoreCategory.SIXES -> ImageBitmap.imageResource(R.drawable.img_dice_default_6)
-        ScoreCategory.THREE_OF_A_KIND -> ImageBitmap.imageResource(R.drawable.img_three_of_a_kind)
-        ScoreCategory.FOUR_OF_A_KIND -> ImageBitmap.imageResource(R.drawable.img_four_of_a_kind)
-        ScoreCategory.FULL_HOUSE -> ImageBitmap.imageResource(R.drawable.img_full_house)
-        ScoreCategory.SMALL_STRAIGHT -> ImageBitmap.imageResource(R.drawable.img_small_straight)
-        ScoreCategory.LARGE_STRAIGHT -> ImageBitmap.imageResource(R.drawable.img_large_straight)
-        ScoreCategory.CHANCE -> ImageBitmap.imageResource(R.drawable.img_chance)
-        ScoreCategory.YAHTZEE -> ImageBitmap.imageResource(R.drawable.img_yahtzee)
+private fun Score.getImageWithState(
+    @DrawableRes defaultResId: Int,
+    @DrawableRes selectedResId: Int,
+    @DrawableRes pickedResId: Int,
+): ImageVector {
+    return when {
+        isPicked -> ImageVector.vectorResource(pickedResId)
+        isSelected -> ImageVector.vectorResource(selectedResId)
+        else -> ImageVector.vectorResource(defaultResId)
     }
 }
