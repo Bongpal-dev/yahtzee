@@ -45,6 +45,14 @@ coroutine = "1.10.1"
 appcompat = "1.7.0"
 material = "1.12.0"
 
+## Room
+# https://developer.android.com/training/data-storage/room?hl=ko
+room = "2.6.1"
+
+## Paging3
+# https://developer.android.com/jetpack/androidx/releases/paging
+paging = "3.3.6"
+
 [libraries]
 ## Gradle Plugin
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -80,6 +88,17 @@ coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutin
 ## Kotlin Serialization
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
+# Room
+androidx-room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
+
+## paging
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
+androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "paging" }
+
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -108,4 +127,4 @@ yatzee-android-application = { id = "yatzee.android.application" }
 yatzee-android-feature = { id = "yatzee.android.feature" }
 yatzee-android-library = { id = "yatzee.android.library" }
 yatzee-android-compose = { id = "yatzee.android.compose" }
-yatzee-kotlin-library = {id = "yatzee.kotlin.library"}
+yatzee-kotlin-library = { id = "yatzee.kotlin.library" }
