@@ -2,10 +2,11 @@ plugins {
     alias(libs.plugins.yatzee.android.application)
 }
 
-android{
+android {
     namespace = "com.bongpal.yatzee.app"
 }
 
 dependencies {
     implementation(projects.feature.main)
+    implementation(projects.core.data)
 }

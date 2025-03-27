@@ -11,3 +11,12 @@ dependencies {
     // build-logic에서 versionCatalog에 접근할 수 있도록 해주는 LibrariesForLibs 클래스 생성 가능
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }
+
+gradlePlugin {
+    plugins {
+        register("andaroidHilt") {
+            id = "yatzze.android.hilt"
+            implementationClass = "com.bongpal.yatzee.HiltAndroidPlugin"
+        }
+    }
+}

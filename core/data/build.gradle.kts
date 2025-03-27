@@ -8,4 +8,7 @@ setNamespace("core.data")
 
 dependencies {
     implementation(projects.core.domain)
+    implementation(projects.core.local)
+
+    implementation(libs.androidx.paging.runtime)
 }

@@ -18,4 +18,5 @@ dependencies {
     implementation(projects.feature.home)
     implementation(projects.feature.play)
     implementation(projects.feature.result)
+    implementation(projects.feature.scoreboard)
 }

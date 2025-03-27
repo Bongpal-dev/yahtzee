@@ -23,14 +23,20 @@ dependencyResolutionManagement {
 rootProject.name = "yatzee"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
-include(":feature:main")
-include(":core:navigation")
-include(":core:designsystem")
-include(":feature:home")
-include(":feature:play")
-include(":core:model")
-include(":feature:result")
-include(":core:common")
-include(":core:ui")
-include(":core:domain")
-include(":core:data")
+include(
+    ":feature:main",
+    ":feature:home",
+    ":feature:play",
+    ":feature:result"
+)
+include(
+    ":core:navigation",
+    ":core:designsystem",
+    ":core:model",
+    ":core:common",
+    ":core:ui",
+    ":core:domain",
+    ":core:data",
+    ":core:local"
+)
+include(":feature:scoreboard")

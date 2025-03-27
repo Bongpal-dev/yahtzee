@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name="com.bongpal.main.MainActivity"
+            android:name=".MainActivity"
             android:configChanges="uiMode"
             android:exported="true"
             android:theme="@style/Theme.Yatzee">

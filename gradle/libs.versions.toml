@@ -53,6 +53,10 @@ room = "2.6.1"
 # https://developer.android.com/jetpack/androidx/releases/paging
 paging = "3.3.6"
 
+## Coil3
+# https://github.com/coil-kt/coil
+coil = "3.1.0"
+
 [libraries]
 ## Gradle Plugin
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -99,6 +103,10 @@ androidx-paging-compose = { module = "androidx.paging:paging-compose", version.r
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
 androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "paging" }
 
+## coil
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
+
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -110,7 +118,6 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-
 
 
 [plugins]
@@ -127,4 +134,5 @@ yatzee-android-application = { id = "yatzee.android.application" }
 yatzee-android-feature = { id = "yatzee.android.feature" }
 yatzee-android-library = { id = "yatzee.android.library" }
 yatzee-android-compose = { id = "yatzee.android.compose" }
+yatzee-android-hilt = { id = "yatzze.android.hilt" }
 yatzee-kotlin-library = { id = "yatzee.kotlin.library" }
