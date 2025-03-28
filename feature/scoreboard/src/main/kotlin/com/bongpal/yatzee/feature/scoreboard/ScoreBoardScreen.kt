@@ -1,5 +1,7 @@
 package com.bongpal.yatzee.feature.scoreboard
 
+import android.graphics.Bitmap
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,15 +14,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -33,7 +38,7 @@ import com.bongpal.yatzee.core.designsystem.theme.ActivePink
 import com.bongpal.yatzee.core.designsystem.theme.DarkGray
 import com.bongpal.yatzee.core.designsystem.theme.Typography
 import com.bongpal.yatzee.core.model.GameRecord
-import com.bongpal.yatzee.core.ui.component.TierIcon
+import com.bongpal.yatzee.core.model.Tier
 import com.bongpal.yatzee.core.ui.model.toUiModel
 
 @Composable
@@ -50,6 +55,7 @@ internal fun ScoreBoardRoute(
         currentScore = uiState.currentScore,
         popBackStack = popBackStack,
         gameRecords = gameRecords,
+        tierImages = uiState.tierImages,
         paddingValues = paddingValues
     )
 }
@@ -59,10 +65,16 @@ private fun ScoreBoardScreen(
     currentScore: Int? = null,
     popBackStack: () -> Unit = {},
     gameRecords: LazyPagingItems<GameRecord>,
+    tierImages: Map<Tier, Bitmap> = emptyMap(),
     paddingValues: PaddingValues = PaddingValues()
 ) {
     val currentRecordIndex =
         gameRecords.itemSnapshotList.indexOfFirst { it?.totalScore == currentScore }
+    val scrollState = rememberLazyListState()
+
+    LaunchedEffect(currentRecordIndex) {
+        if (currentRecordIndex > -1) scrollState.scrollToItem(currentRecordIndex)
+    }
 
     Column(
         modifier = Modifier
@@ -100,8 +112,9 @@ private fun ScoreBoardScreen(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
-                    .padding(horizontal = 36.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(horizontal = 12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                state = scrollState
             ) {
                 items(gameRecords.itemCount) { i ->
                     Row(
@@ -139,18 +152,27 @@ private fun ScoreBoardScreen(
                             modifier = Modifier.weight(1f)
                         )
 
-                        TierIcon(
-                            score = gameRecords[i]?.totalScore ?: 0,
-                            modifier = Modifier
-                                .size(48.dp)
+                        Image(
+                            bitmap = tierImages[gameRecords[i]?.tier]?.asImageBitmap()
+                                ?: return@Row,
+                            contentDescription = null,
+                            modifier = Modifier.size(48.dp)
                         )
 
-                        Text(
-                            text = gameRecords[i]?.tier?.toUiModel()?.displayName ?: "",
-                            color = if (i == currentRecordIndex) Color.White else gameRecords[i]?.tier?.toUiModel()?.color
-                                ?: Color.White,
-                            style = Typography.labelSmall
-                        )
+                        Box {
+                            Text(
+                                text = "그랜드 마스터",
+                                color = Color.Transparent,
+                                style = Typography.labelSmall
+                            )
+
+                            Text(
+                                text = gameRecords[i]?.tier?.toUiModel()?.displayName ?: "",
+                                color = if (i == currentRecordIndex) Color.White else gameRecords[i]?.tier?.toUiModel()?.color
+                                    ?: Color.White,
+                                style = Typography.labelSmall
+                            )
+                        }
                     }
                 }
 

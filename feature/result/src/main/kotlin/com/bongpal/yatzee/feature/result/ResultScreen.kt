@@ -1,5 +1,7 @@
 package com.bongpal.yatzee.feature.result
 
+import android.graphics.Bitmap
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,13 +15,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bongpal.yatzee.core.designsystem.theme.Typography
-import com.bongpal.yatzee.core.ui.component.TierIcon
 import com.bongpal.yatzee.core.ui.model.toUiModel
 
 @Composable
@@ -35,6 +37,7 @@ internal fun ResultRoute(
         navigateToHome = navigateToHome,
         navigateToScoreBoard = navigateToScoreBoard,
         paddingValues = paddingValues,
+        tierImage = uiState.tierImage,
         finalScore = uiState.finalScore
     )
 }
@@ -44,6 +47,7 @@ private fun ResultScreen(
     navigateToHome: () -> Unit = {},
     navigateToScoreBoard: (Int) -> Unit = {},
     paddingValues: PaddingValues = PaddingValues(),
+    tierImage: Bitmap? = null,
     finalScore: Int = 120,
 ) {
     val tier = finalScore.toUiModel()
@@ -66,12 +70,15 @@ private fun ResultScreen(
             style = Typography.headlineLarge
         )
 
-        TierIcon(
-            score = finalScore,
-            modifier = Modifier
-                .fillMaxWidth(0.65f)
-                .padding(vertical = 12.dp)
-        )
+        tierImage?.let {
+            Image(
+                bitmap = tierImage.asImageBitmap(),
+                contentDescription = "티어 이미지",
+                modifier = Modifier
+                    .fillMaxWidth(0.65f)
+                    .padding(vertical = 12.dp)
+            )
+        }
 
         Text(
             text = tier.displayName,

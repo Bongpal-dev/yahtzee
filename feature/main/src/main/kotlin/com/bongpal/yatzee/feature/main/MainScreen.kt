@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -25,7 +26,8 @@ fun NavController.getBackStackEntries(): List<NavBackStackEntry> {
 
 @Composable
 internal fun MainRoute(
-    navigator: MainNavigator = rememberMainNavigator()
+    navigator: MainNavigator = rememberMainNavigator(),
+    viewModel: MainViewModel = hiltViewModel()
 ) {
     val currentEntry by navigator.navController.currentBackStackEntryAsState()
 
@@ -39,7 +41,7 @@ internal fun MainRoute(
         }
         Log.d("NavBackStack", "------------------")
     }
-
+    LaunchedEffect(Unit) { viewModel.preLoadImage() }
     MainScreen(
         navigator = navigator
     )

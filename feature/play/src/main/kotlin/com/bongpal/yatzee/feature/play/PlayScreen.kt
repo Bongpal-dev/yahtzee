@@ -1,5 +1,6 @@
 package com.bongpal.yatzee.feature.play
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -53,6 +54,7 @@ internal fun PlayRoute(
 
     PlayScreen(
         dices = uiState.dices,
+        scoreImages = uiState.scoreInitialImages,
         rollingState = uiState.isRolling,
         rollCount = uiState.rollCount,
         upperScoreUiModels = uiState.scoreUiModels.filter { it.category.section == UPPER },
@@ -70,6 +72,7 @@ internal fun PlayRoute(
 @Composable
 private fun PlayScreen(
     dices: List<Dice> = List(5) { Dice() },
+    scoreImages: Map<ScoreCategory, Bitmap> = emptyMap(),
     rollingState: Boolean = false,
     rollCount: Int = 0,
     upperScoreUiModels: List<ScoreUiModel> = ScoreCategory.entries.map {
@@ -136,6 +139,7 @@ private fun PlayScreen(
                         uppers.forEach { score ->
                             ScoreButton(
                                 scoreUiModel = score,
+                                defaultImage = scoreImages.getValue(score.category),
                                 selectScore = selectScore,
                                 pickScore = pickScore,
                                 selectable = dices.isNotEmpty(),
@@ -210,6 +214,7 @@ private fun PlayScreen(
                         lower.forEach { score ->
                             ScoreButton(
                                 scoreUiModel = score,
+                                defaultImage = scoreImages.getValue(score.category),
                                 selectScore = selectScore,
                                 pickScore = pickScore,
                                 selectable = dices.isNotEmpty(),

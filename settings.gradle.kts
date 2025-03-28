@@ -40,3 +40,4 @@ include(
     ":core:local"
 )
 include(":feature:scoreboard")
+include(":core:resource")

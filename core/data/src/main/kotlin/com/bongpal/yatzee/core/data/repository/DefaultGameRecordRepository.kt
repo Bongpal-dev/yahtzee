@@ -1,6 +1,5 @@
 package com.bongpal.yatzee.core.data.repository
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -26,7 +25,6 @@ class DefaultGameRecordRepository @Inject constructor(
     }
 
     override suspend fun saveRecord(gameRecord: GameRecord) {
-        Log.i("insertTest: repository", "insertRecord: $gameRecord")
         localGameRecordDataSource.insertRecord(gameRecord)
     }
 }

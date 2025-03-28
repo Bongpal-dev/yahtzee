@@ -1,7 +1,9 @@
 package com.bongpal.yatzee.feature.play
 
+import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bongpal.yatzee.core.domain.usecase.GetScoreImageUseCase
 import com.bongpal.yatzee.core.domain.usecase.SaveGameRecordUseCase
 import com.bongpal.yatzee.core.model.GameRecord
 import com.bongpal.yatzee.core.model.ScoreCategory
@@ -19,6 +21,7 @@ import javax.inject.Inject
 
 data class PlayUiState(
     val dices: List<Dice> = emptyList(),
+    val scoreInitialImages: Map<ScoreCategory, Bitmap> = emptyMap(),
     val isRolling: Boolean = false,
     val rollCount: Int = 0,
     val upperSectionScore: Int = 0,
@@ -29,12 +32,19 @@ data class PlayUiState(
 
 @HiltViewModel
 class PlayViewModel @Inject constructor(
+    getScoreImageUseCase: GetScoreImageUseCase,
     private val saveGameRecordUseCase: SaveGameRecordUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(PlayUiState())
     val uiState = _uiState.asStateFlow()
 
     private var upperBonus = false
+
+    init {
+        viewModelScope.launch {
+            _uiState.update { state -> state.copy(scoreInitialImages = getScoreImageUseCase()) }
+        }
+    }
 
     fun rollDice() {
         if (uiState.value.isRolling) return
