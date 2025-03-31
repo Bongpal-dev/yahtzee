@@ -1,6 +1,7 @@
 package com.bongpal.yatzee.feature.play
 
 import android.graphics.Bitmap
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -102,7 +105,7 @@ private fun PlayScreen(
             .fillMaxSize()
             .padding(paddingValues)
             .padding(horizontal = 12.dp, vertical = 24.dp),
-        verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.Top),
+        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Column(
@@ -211,6 +214,10 @@ private fun PlayScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
+                        if (lower.size < 2) {
+                            Box(modifier = Modifier.weight(1f))
+                        }
+
                         lower.forEach { score ->
                             ScoreButton(
                                 scoreUiModel = score,
@@ -223,10 +230,6 @@ private fun PlayScreen(
                                     .height(40.dp)
                                     .weight(1f)
                             )
-                        }
-
-                        if (lower.size < 2) {
-                            Box(modifier = Modifier.weight(1f))
                         }
                     }
                 }
@@ -260,16 +263,60 @@ private fun PlayScreen(
             holdDice = holdDice,
         )
 
-        ImageButton(
-            imageVector = ImageVector.vectorResource(R.drawable.img_roll_button_enable),
-            pressedImage = ImageVector.vectorResource(R.drawable.img_roll_button_pressed_enable),
-            disabledImage = ImageVector.vectorResource(R.drawable.img_roll_button_disable),
-            disabledPressedImage = ImageVector.vectorResource(R.drawable.img_roll_button_pressed_disable),
-            enabled = rollCount < 3,
-            onClick = {
-                if (dices.any { it.isHeld.not() } || dices.isEmpty()) rollDice()
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 28.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterStart),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "다시?",
+                    style = Typography.labelSmall,
+                )
+
+                Row(
+                    modifier = Modifier.weight(1f, fill = false),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        12.dp,
+                        Alignment.CenterHorizontally
+                    ),
+                ) {
+                    (1..3 - rollCount).forEach {
+                        val image = when (it) {
+                            1 -> scoreImages[ScoreCategory.ACES]
+                            2 -> scoreImages[ScoreCategory.TWOS]
+                            3 -> scoreImages[ScoreCategory.THREES]
+                            else -> null
+                        } ?: return@Row
+
+                        Image(
+                            bitmap = image.asImageBitmap(),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(24.dp)
+                        )
+                    }
+                }
             }
-        )
+            ImageButton(
+                imageVector = ImageVector.vectorResource(R.drawable.img_roll_button_enable),
+                pressedImage = ImageVector.vectorResource(R.drawable.img_roll_button_pressed_enable),
+                disabledImage = ImageVector.vectorResource(R.drawable.img_roll_button_disable),
+                disabledPressedImage = ImageVector.vectorResource(R.drawable.img_roll_button_pressed_disable),
+                enabled = rollCount < 3,
+                onClick = {
+                    if (dices.any { it.isHeld.not() } || dices.isEmpty()) rollDice()
+                },
+                modifier = Modifier
+                    .align(Alignment.CenterEnd),
+            )
+        }
     }
 }
 

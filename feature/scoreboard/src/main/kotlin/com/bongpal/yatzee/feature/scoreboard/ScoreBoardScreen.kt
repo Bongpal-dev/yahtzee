@@ -73,7 +73,11 @@ private fun ScoreBoardScreen(
     val scrollState = rememberLazyListState()
 
     LaunchedEffect(currentRecordIndex) {
-        if (currentRecordIndex > -1) scrollState.scrollToItem(currentRecordIndex)
+        if (currentRecordIndex > -1) scrollState.animateScrollToItem(
+            (currentRecordIndex - 5).coerceAtLeast(
+                0
+            )
+        )
     }
 
     Column(

@@ -41,6 +41,14 @@ internal fun DiceSection(
         ImageVector.vectorResource(R.drawable.img_dice_5),
         ImageVector.vectorResource(R.drawable.img_dice_6)
     )
+    val disableDiceResources = listOf(
+        ImageVector.vectorResource(R.drawable.img_dice_1_disable),
+        ImageVector.vectorResource(R.drawable.img_dice_2_disable),
+        ImageVector.vectorResource(R.drawable.img_dice_3_disable),
+        ImageVector.vectorResource(R.drawable.img_dice_4_disable),
+        ImageVector.vectorResource(R.drawable.img_dice_5_disable),
+        ImageVector.vectorResource(R.drawable.img_dice_6_disable)
+    )
 
     Row(
         modifier = modifier
@@ -66,10 +74,10 @@ internal fun DiceSection(
                 }
             }
 
-            val diceImage = if (isRolling && !dice.isHeld) {
-                diceResources[animatedIndex]
-            } else {
-                diceResources[dice.value - 1]
+            val diceImage = when {
+                dice.isHeld -> disableDiceResources[dice.value - 1]
+                isRolling && !dice.isHeld -> diceResources[animatedIndex]
+                else -> diceResources[dice.value - 1]
             }
 
             Image(
@@ -89,74 +97,4 @@ internal fun DiceSection(
             )
         }
     }
-
-//    BoxWithConstraints(
-//        modifier = modifier
-//            .fillMaxWidth()
-//            .fillMaxHeight()
-//            .padding(horizontal = 20.dp)
-//    ) {
-//        val containerWidth = maxWidth
-//        val containerHeight = maxHeight
-//        val gap = 8.dp
-//        val diceCount = if (dices.isNotEmpty()) dices.size else 1
-//        val totalSpacing = if (diceCount > 1) (diceCount - 1) * gap else 0.dp
-//        val availableWidth = containerWidth - totalSpacing
-//        val diceSide = if (containerHeight * diceCount > availableWidth) {
-//            availableWidth / diceCount
-//        } else {
-//            containerHeight
-//        }
-//
-//        Row(
-//            modifier = Modifier.fillMaxSize(),
-//            horizontalArrangement = Arrangement.spacedBy(gap, Alignment.CenterHorizontally),
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            dices.forEachIndexed { i, dice ->
-//                var localHeight by remember { mutableIntStateOf(1) }
-//                val offset by animateFloatAsState(
-//                    targetValue = if (dice.isHeld) localHeight.toFloat() else 0f,
-//                    animationSpec = tween(durationMillis = 200)
-//                )
-//
-//                var animatedIndex by remember { mutableIntStateOf(dice.value - 1) }
-//
-//                LaunchedEffect(isRolling, dice.isHeld) {
-//                    if (isRolling && !dice.isHeld) {
-//                        while (true) {
-//                            animatedIndex = (animatedIndex + 1) % diceResources.size
-//                            delay(70)
-//                        }
-//                    }
-//                }
-//
-//                val diceImage = if (isRolling && !dice.isHeld) {
-//                    diceResources[animatedIndex]
-//                } else {
-//                    diceResources[dice.value - 1]
-//                }
-//
-//                Box(
-//                    modifier = Modifier
-//                        .size(diceSide)
-//                        .onSizeChanged {
-//                            localHeight = it.height
-//                        }
-//                ) {
-//
-//                    Image(
-//                        imageVector = diceImage,
-//                        contentDescription = null,
-//                        modifier = Modifier
-//                            .fillMaxSize()
-//                            .graphicsLayer {
-//                                translationY = offset
-//                            }
-//                            .clickable { if (isRolling.not()) holdDice(i) }
-//                    )
-//                }
-//            }
-//        }
-//    }
 }

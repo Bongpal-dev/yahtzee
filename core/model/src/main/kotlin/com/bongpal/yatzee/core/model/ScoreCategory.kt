@@ -8,11 +8,11 @@ enum class ScoreCategory(val section: Int) {
     FIVES(UPPER),
     SIXES(UPPER),
     THREE_OF_A_KIND(LOWER),
-    FOUR_OF_A_KIND(LOWER),
     FULL_HOUSE(LOWER),
+    FOUR_OF_A_KIND(LOWER),
     SMALL_STRAIGHT(LOWER),
-    LARGE_STRAIGHT(LOWER),
     CHANCE(LOWER),
+    LARGE_STRAIGHT(LOWER),
     YAHTZEE(LOWER),
 }
 
