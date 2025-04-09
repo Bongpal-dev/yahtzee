@@ -1,6 +1,7 @@
 package com.bongpal.yatzee.feature.play
 
-import android.graphics.Bitmap
+import android.os.VibrationEffect
+import android.os.Vibrator
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,11 +19,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,13 +39,11 @@ import com.bongpal.yatzee.core.designsystem.theme.ActivePink
 import com.bongpal.yatzee.core.designsystem.theme.DefaultBlack
 import com.bongpal.yatzee.core.designsystem.theme.LightGray
 import com.bongpal.yatzee.core.designsystem.theme.Typography
-import com.bongpal.yatzee.core.model.LOWER
 import com.bongpal.yatzee.core.model.ScoreCategory
-import com.bongpal.yatzee.core.model.UPPER
 import com.bongpal.yatzee.feature.play.component.DiceSection
 import com.bongpal.yatzee.feature.play.component.ScoreButton
-import com.bongpal.yatzee.feature.play.model.Dice
-import com.bongpal.yatzee.feature.play.model.ScoreUiModel
+import com.bongpal.yatzee.feature.play.component.ScoreInfoPopup
+import com.bongpal.yatzee.feature.play.model.PlayIntent
 
 @Composable
 internal fun PlayRoute(
@@ -48,6 +52,9 @@ internal fun PlayRoute(
     viewModel: PlayViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var isShowScorePopup by remember { mutableStateOf(false) }
+    var longPressedScore by remember { mutableStateOf<ScoreCategory?>(null) }
+    var popUpOffset by remember { mutableStateOf(Offset(0f, 0f)) }
 
     LaunchedEffect(uiState.isEnd) {
         if (uiState.isEnd) {
@@ -56,48 +63,39 @@ internal fun PlayRoute(
     }
 
     PlayScreen(
-        dices = uiState.dices,
-        scoreImages = uiState.scoreInitialImages,
-        rollingState = uiState.isRolling,
-        rollCount = uiState.rollCount,
-        upperScoreUiModels = uiState.scoreUiModels.filter { it.category.section == UPPER },
-        lowerScoreUiModels = uiState.scoreUiModels.filter { it.category.section == LOWER },
-        upperScore = uiState.upperSectionScore,
-        finalScore = uiState.finalScore,
-        rollDice = viewModel::rollDice,
-        holdDice = viewModel::holdDice,
-        selectScore = viewModel::selectScore,
-        pickScore = viewModel::pickScore,
+        onAction = viewModel::onAction,
+        uiState = uiState,
+        showScorePopup = { score, offset ->
+            popUpOffset = offset
+            longPressedScore = score
+            isShowScorePopup = true
+        },
+        hideScorePopup = {
+            longPressedScore = null
+            isShowScorePopup = false
+        },
         paddingValues = paddingValues
     )
+
+    if (isShowScorePopup) {
+        val score = longPressedScore ?: return
+
+        ScoreInfoPopup(
+            score = score,
+            offset = popUpOffset,
+            scoreIcon = uiState.scoreInitialImages.getValue(score),
+            hideDialog = { isShowScorePopup = false },
+            modifier = Modifier.fillMaxWidth(0.85f)
+        )
+    }
 }
 
 @Composable
 private fun PlayScreen(
-    dices: List<Dice> = List(5) { Dice() },
-    scoreImages: Map<ScoreCategory, Bitmap> = emptyMap(),
-    rollingState: Boolean = false,
-    rollCount: Int = 0,
-    upperScoreUiModels: List<ScoreUiModel> = ScoreCategory.entries.map {
-        ScoreUiModel(
-            category = it,
-            point = 26
-        )
-    }
-        .filter { it.isUpper() },
-    lowerScoreUiModels: List<ScoreUiModel> = ScoreCategory.entries.map {
-        ScoreUiModel(
-            category = it,
-            point = 26
-        )
-    }
-        .filter { it.isUpper().not() },
-    upperScore: Int = 0,
-    finalScore: Int = 0,
-    rollDice: () -> Unit = {},
-    holdDice: (Int) -> Unit = {},
-    selectScore: (ScoreUiModel) -> Unit = {},
-    pickScore: (ScoreUiModel) -> Unit = {},
+    onAction: (PlayIntent) -> Unit = {},
+    uiState: PlayUiState = PlayUiState(),
+    showScorePopup: (ScoreCategory, Offset) -> Unit = { _, _ -> },
+    hideScorePopup: () -> Unit = {},
     paddingValues: PaddingValues = PaddingValues(),
 ) {
     Column(
@@ -132,7 +130,7 @@ private fun PlayScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                upperScoreUiModels.chunked(3).forEach { uppers ->
+                uiState.scoreUiModels.filter { it.isUpper() }.chunked(3).forEach { uppers ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -142,11 +140,11 @@ private fun PlayScreen(
                         uppers.forEach { score ->
                             ScoreButton(
                                 scoreUiModel = score,
-                                defaultImage = scoreImages.getValue(score.category),
-                                selectScore = selectScore,
-                                pickScore = pickScore,
-                                selectable = dices.isNotEmpty(),
-                                rollingState = rollingState,
+                                defaultImage = uiState.scoreInitialImages.getValue(score.category),
+                                handleScoreClick = { onAction(PlayIntent.ClickScore(it)) },
+                                showPopup = { showScorePopup(score.category, it) },
+                                hidePopup = hideScorePopup,
+                                rollingState = uiState.isRolling,
                                 modifier = Modifier
                                     .height(40.dp)
                                     .weight(1f)
@@ -170,15 +168,15 @@ private fun PlayScreen(
                 )
 
                 Text(
-                    text = "$upperScore / 63",
+                    text = "${uiState.upperScore} / 63",
                     style = Typography.labelSmall,
                     color = LightGray
                 )
 
                 Text(
-                    text = if (upperScore >= 63) "+35" else "+0",
+                    text = if (uiState.upperBonus) "+35" else "+0",
                     style = Typography.headlineMedium,
-                    color = if (upperScore >= 63) ActivePink else DefaultBlack
+                    color = if (uiState.upperBonus) ActivePink else DefaultBlack
                 )
             }
         }
@@ -207,7 +205,7 @@ private fun PlayScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                lowerScoreUiModels.chunked(2).forEach { lower ->
+                uiState.scoreUiModels.filter { it.isLower() }.chunked(2).forEach { lower ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -221,11 +219,11 @@ private fun PlayScreen(
                         lower.forEach { score ->
                             ScoreButton(
                                 scoreUiModel = score,
-                                defaultImage = scoreImages.getValue(score.category),
-                                selectScore = selectScore,
-                                pickScore = pickScore,
-                                selectable = dices.isNotEmpty(),
-                                rollingState = rollingState,
+                                defaultImage = uiState.scoreInitialImages.getValue(score.category),
+                                showPopup = { showScorePopup(score.category, it) },
+                                hidePopup = hideScorePopup,
+                                handleScoreClick = { onAction(PlayIntent.ClickScore(it)) },
+                                rollingState = uiState.isRolling,
                                 modifier = Modifier
                                     .height(40.dp)
                                     .weight(1f)
@@ -249,7 +247,7 @@ private fun PlayScreen(
                 )
 
                 Text(
-                    text = "$finalScore 점",
+                    text = "${uiState.finalScore} 점",
                     color = DefaultBlack,
                     style = Typography.headlineMedium,
                 )
@@ -258,9 +256,9 @@ private fun PlayScreen(
 
 
         DiceSection(
-            dices = dices,
-            isRolling = rollingState,
-            holdDice = holdDice,
+            dices = uiState.dices,
+            isRolling = uiState.isRolling,
+            holdDice = onAction,
         )
 
         Box(
@@ -287,11 +285,11 @@ private fun PlayScreen(
                         Alignment.CenterHorizontally
                     ),
                 ) {
-                    (1..3 - rollCount).forEach {
+                    (1..3 - uiState.rollCount).forEach {
                         val image = when (it) {
-                            1 -> scoreImages[ScoreCategory.ACES]
-                            2 -> scoreImages[ScoreCategory.TWOS]
-                            3 -> scoreImages[ScoreCategory.THREES]
+                            1 -> uiState.scoreInitialImages[ScoreCategory.ACES]
+                            2 -> uiState.scoreInitialImages[ScoreCategory.TWOS]
+                            3 -> uiState.scoreInitialImages[ScoreCategory.THREES]
                             else -> null
                         } ?: return@Row
 
@@ -304,14 +302,25 @@ private fun PlayScreen(
                     }
                 }
             }
+            val context = LocalContext.current
             ImageButton(
                 imageVector = ImageVector.vectorResource(R.drawable.img_roll_button_enable),
                 pressedImage = ImageVector.vectorResource(R.drawable.img_roll_button_pressed_enable),
                 disabledImage = ImageVector.vectorResource(R.drawable.img_roll_button_disable),
                 disabledPressedImage = ImageVector.vectorResource(R.drawable.img_roll_button_pressed_disable),
-                enabled = rollCount < 3,
+                enabled = uiState.rollCount < 3,
                 onClick = {
-                    if (dices.any { it.isHeld.not() } || dices.isEmpty()) rollDice()
+                    if (uiState.dices.any { it.isHeld.not() } || uiState.dices.isEmpty()) {
+                        val vibrator = context.getSystemService(Vibrator::class.java)
+
+                        vibrator?.vibrate(
+                            VibrationEffect.createOneShot(
+                                50,
+                                VibrationEffect.DEFAULT_AMPLITUDE
+                            )
+                        )
+                        onAction(PlayIntent.RollDice)
+                    }
                 },
                 modifier = Modifier
                     .align(Alignment.CenterEnd),

@@ -24,13 +24,14 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.bongpal.yatzee.feature.play.R
 import com.bongpal.yatzee.feature.play.model.Dice
+import com.bongpal.yatzee.feature.play.model.PlayIntent
 import kotlinx.coroutines.delay
 
 @Composable
 internal fun DiceSection(
     dices: List<Dice> = emptyList(),
     isRolling: Boolean = false,
-    holdDice: (Int) -> Unit = {},
+    holdDice: (PlayIntent) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val diceResources = listOf(
@@ -59,18 +60,16 @@ internal fun DiceSection(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
         dices.forEachIndexed { i, dice ->
-            var animatedIndex by remember { mutableIntStateOf(dice.value - 1) }
+            var animatedIndex by remember(isRolling, dice) { mutableIntStateOf(dice.value - 1) }
             val offset by animateFloatAsState(
                 targetValue = if (dice.isHeld) with(LocalDensity.current) { 32.dp.toPx() } else 0f,
                 animationSpec = tween(durationMillis = 200)
             )
 
-            LaunchedEffect(isRolling, dice.isHeld) {
-                if (isRolling && !dice.isHeld) {
-                    while (true) {
-                        animatedIndex = (animatedIndex + 1) % diceResources.size
-                        delay(70)
-                    }
+            LaunchedEffect(isRolling, dice) {
+                while (isRolling && !dice.isHeld) {
+                    animatedIndex = (animatedIndex + 1) % diceResources.size
+                    delay(70)
                 }
             }
 
@@ -90,7 +89,7 @@ internal fun DiceSection(
                         translationY = offset
                     }
                     .clickable(
-                        onClick = { if (isRolling.not()) holdDice(i) },
+                        onClick = { if (isRolling.not()) holdDice(PlayIntent.HoldDice(i)) },
                         indication = null,
                         interactionSource = null
                     )

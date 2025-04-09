@@ -1,5 +1,6 @@
 package com.bongpal.yatzee.feature.play.model
 
+import com.bongpal.yatzee.core.model.LOWER
 import com.bongpal.yatzee.core.model.Score
 import com.bongpal.yatzee.core.model.ScoreCategory
 import com.bongpal.yatzee.core.model.UPPER
@@ -11,6 +12,7 @@ data class ScoreUiModel(
     val isPicked: Boolean = false,
 ) {
     fun isUpper() = category.section == UPPER
+    fun isLower() = category.section == LOWER
 }
 
 fun ScoreUiModel.toModel() = Score(
