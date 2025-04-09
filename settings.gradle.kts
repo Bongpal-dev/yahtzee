@@ -41,3 +41,4 @@ include(
 )
 include(":feature:scoreboard")
 include(":core:resource")
+include(":feature:guide")

@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
+import com.bongpal.yatzee.feature.guide.navigation.guideNavGraph
 import com.bongpal.yatzee.feature.home.navigation.homeNavGraph
 import com.bongpal.yatzee.feature.main.MainNavigator
 import com.bongpal.yatzee.feature.play.navigation.playNavGraph
@@ -32,6 +33,7 @@ internal fun MainNavHost(
             homeNavGraph(
                 navigateToPlay = navigator::navigatePlay,
                 navigateToScoreBoard = navigator::navigateScoreBoard,
+                navigateToGuide = navigator::navigateGuide,
                 paddingValues = paddingValues
             )
 
@@ -50,6 +52,11 @@ internal fun MainNavHost(
                 navigateToHome = navigator::navigateHome,
                 popBackStack = navigator.navController::popBackStack,
                 paddingValues = paddingValues
+            )
+
+            guideNavGraph(
+                paddingValues = paddingValues,
+                popBackStack = navigator.navController::popBackStack
             )
         }
     }

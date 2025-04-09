@@ -1,6 +1,5 @@
 package com.bongpal.yatzee.feature.home
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,11 +24,13 @@ import com.bongpal.yatzee.core.designsystem.theme.Typography
 internal fun HomeRoute(
     navigateToPlay: () -> Unit,
     navigateToScoreBoard: () -> Unit,
+    navigateToGuide: () -> Unit,
     paddingValues: PaddingValues,
 ) {
     HomeScreen(
         navigateToPlay = navigateToPlay,
         navigateToScoreBoard = navigateToScoreBoard,
+        navigateToGuide = navigateToGuide,
         paddingValues = paddingValues
     )
 }
@@ -38,6 +39,7 @@ internal fun HomeRoute(
 private fun HomeScreen(
     navigateToPlay: () -> Unit = {},
     navigateToScoreBoard: () -> Unit = {},
+    navigateToGuide: () -> Unit = {},
     paddingValues: PaddingValues = PaddingValues(),
 ) {
     Column(
@@ -62,10 +64,7 @@ private fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             TextButton(
-                onClick = {
-                    navigateToPlay()
-                    Log.i("delay_test", "click start")
-                }
+                onClick = navigateToPlay
             ) {
                 Text(
                     text = "게임 시작",
@@ -74,7 +73,7 @@ private fun HomeScreen(
             }
 
             TextButton(
-                onClick = {}
+                onClick = navigateToGuide
             ) {
                 Text(
                     text = "게임 설명",

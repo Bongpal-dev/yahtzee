@@ -19,4 +19,5 @@ dependencies {
     implementation(projects.feature.play)
     implementation(projects.feature.result)
     implementation(projects.feature.scoreboard)
+    implementation(projects.feature.guide)
 }

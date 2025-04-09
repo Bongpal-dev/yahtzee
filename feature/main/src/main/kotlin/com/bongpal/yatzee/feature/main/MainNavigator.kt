@@ -9,6 +9,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.bongpal.yatzee.core.navigation.Route
+import com.bongpal.yatzee.feature.guide.navigation.navigateGuide
 import com.bongpal.yatzee.feature.home.navigation.navigateHome
 import com.bongpal.yatzee.feature.play.navigation.navigatePlay
 import com.bongpal.yatzee.feature.result.navigation.navigateResult
@@ -41,6 +42,10 @@ internal class MainNavigator(
 
     fun navigateResult(finalScore: Int) {
         navController.navigateResult(finalScore, navOptions)
+    }
+
+    fun navigateGuide() {
+        navController.navigateGuide()
     }
 }
 

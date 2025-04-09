@@ -15,12 +15,14 @@ fun NavController.navigateHome(navOptions: NavOptions) {
 fun NavGraphBuilder.homeNavGraph(
     navigateToPlay: () -> Unit,
     navigateToScoreBoard: () -> Unit,
+    navigateToGuide: () -> Unit,
     paddingValues: PaddingValues
 ) {
     composable<Route.Home> {
         HomeRoute(
             navigateToPlay = navigateToPlay,
             navigateToScoreBoard = navigateToScoreBoard,
+            navigateToGuide = navigateToGuide,
             paddingValues = paddingValues
         )
     }

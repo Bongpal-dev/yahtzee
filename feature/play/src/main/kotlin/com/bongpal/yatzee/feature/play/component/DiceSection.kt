@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import com.bongpal.yatzee.core.ui.R.drawable
 import com.bongpal.yatzee.feature.play.R
 import com.bongpal.yatzee.feature.play.model.Dice
 import com.bongpal.yatzee.feature.play.model.PlayIntent
@@ -35,12 +36,12 @@ internal fun DiceSection(
     modifier: Modifier = Modifier,
 ) {
     val diceResources = listOf(
-        ImageVector.vectorResource(R.drawable.img_dice_1),
-        ImageVector.vectorResource(R.drawable.img_dice_2),
-        ImageVector.vectorResource(R.drawable.img_dice_3),
-        ImageVector.vectorResource(R.drawable.img_dice_4),
-        ImageVector.vectorResource(R.drawable.img_dice_5),
-        ImageVector.vectorResource(R.drawable.img_dice_6)
+        ImageVector.vectorResource(drawable.img_dice_1),
+        ImageVector.vectorResource(drawable.img_dice_2),
+        ImageVector.vectorResource(drawable.img_dice_3),
+        ImageVector.vectorResource(drawable.img_dice_4),
+        ImageVector.vectorResource(drawable.img_dice_5),
+        ImageVector.vectorResource(drawable.img_dice_6)
     )
     val disableDiceResources = listOf(
         ImageVector.vectorResource(R.drawable.img_dice_1_disable),
