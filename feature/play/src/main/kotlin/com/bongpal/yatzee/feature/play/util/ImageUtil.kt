@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import com.bongpal.yatzee.core.model.ScoreCategory
-import com.bongpal.yatzee.feature.play.R
+import com.bongpal.yatzee.core.resource.R
 import com.bongpal.yatzee.feature.play.model.ScoreUiModel
 
 @Composable

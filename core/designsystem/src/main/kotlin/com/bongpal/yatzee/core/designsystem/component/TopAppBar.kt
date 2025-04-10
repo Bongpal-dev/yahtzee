@@ -39,6 +39,7 @@ fun DefaultTopAppBar(
             navigationIcon()
         }
 
+        Spacer(modifier = Modifier.weight(1f))
 
         title?.let {
             Text(
@@ -47,6 +48,8 @@ fun DefaultTopAppBar(
                 modifier = Modifier
             )
         }
+
+        Spacer(modifier = Modifier.weight(1f))
 
         if (trailingIcon == null) {
             Spacer(Modifier.size(48.dp))

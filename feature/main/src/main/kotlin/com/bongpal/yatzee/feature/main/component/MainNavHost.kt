@@ -56,7 +56,7 @@ internal fun MainNavHost(
 
             guideNavGraph(
                 paddingValues = paddingValues,
-                popBackStack = navigator.navController::popBackStack
+                popBackStack = navigator::navigateHome
             )
         }
     }

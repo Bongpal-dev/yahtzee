@@ -22,8 +22,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import com.bongpal.yatzee.core.ui.R.drawable
-import com.bongpal.yatzee.feature.play.R
+import com.bongpal.yatzee.core.resource.R.drawable
 import com.bongpal.yatzee.feature.play.model.Dice
 import com.bongpal.yatzee.feature.play.model.PlayIntent
 import kotlinx.coroutines.delay
@@ -44,12 +43,12 @@ internal fun DiceSection(
         ImageVector.vectorResource(drawable.img_dice_6)
     )
     val disableDiceResources = listOf(
-        ImageVector.vectorResource(R.drawable.img_dice_1_disable),
-        ImageVector.vectorResource(R.drawable.img_dice_2_disable),
-        ImageVector.vectorResource(R.drawable.img_dice_3_disable),
-        ImageVector.vectorResource(R.drawable.img_dice_4_disable),
-        ImageVector.vectorResource(R.drawable.img_dice_5_disable),
-        ImageVector.vectorResource(R.drawable.img_dice_6_disable)
+        ImageVector.vectorResource(drawable.img_dice_1_disable),
+        ImageVector.vectorResource(drawable.img_dice_2_disable),
+        ImageVector.vectorResource(drawable.img_dice_3_disable),
+        ImageVector.vectorResource(drawable.img_dice_4_disable),
+        ImageVector.vectorResource(drawable.img_dice_5_disable),
+        ImageVector.vectorResource(drawable.img_dice_6_disable)
     )
 
     Row(

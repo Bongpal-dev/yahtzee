@@ -19,6 +19,7 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.dp
 import com.bongpal.yatzee.core.designsystem.component.AutoResizeImage
 import com.bongpal.yatzee.core.designsystem.theme.Typography
+import com.bongpal.yatzee.core.resource.R
 
 @Composable
 internal fun HomeRoute(

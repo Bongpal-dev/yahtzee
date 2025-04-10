@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import com.bongpal.yatzee.core.designsystem.theme.Typography
 import com.bongpal.yatzee.core.model.ScoreCategory
-import com.bongpal.yatzee.feature.play.R
+import com.bongpal.yatzee.core.resource.R.drawable
 
 @Composable
 internal fun ScoreInfoPopup(
@@ -59,7 +59,7 @@ internal fun ScoreInfoPopup(
                 },
         ) {
             Image(
-                imageVector = ImageVector.vectorResource(R.drawable.img_popup_bg),
+                imageVector = ImageVector.vectorResource(drawable.img_popup_bg),
                 contentDescription = null,
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
@@ -100,6 +100,6 @@ internal fun ScoreInfoPopup(
 @Preview(showBackground = true)
 private fun ScoreInfoDialogPreview() {
     ScoreInfoPopup(
-        scoreIcon = ImageBitmap.imageResource(R.drawable.img_ace_dummy).asAndroidBitmap()
+        scoreIcon = ImageBitmap.imageResource(drawable.img_ace_dummy).asAndroidBitmap()
     )
 }

@@ -40,6 +40,7 @@ import com.bongpal.yatzee.core.designsystem.theme.DefaultBlack
 import com.bongpal.yatzee.core.designsystem.theme.LightGray
 import com.bongpal.yatzee.core.designsystem.theme.Typography
 import com.bongpal.yatzee.core.model.ScoreCategory
+import com.bongpal.yatzee.core.resource.R.drawable
 import com.bongpal.yatzee.feature.play.component.DiceSection
 import com.bongpal.yatzee.feature.play.component.ScoreButton
 import com.bongpal.yatzee.feature.play.component.ScoreInfoPopup
@@ -212,10 +213,6 @@ private fun PlayScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        if (lower.size < 2) {
-                            Box(modifier = Modifier.weight(1f))
-                        }
-
                         lower.forEach { score ->
                             ScoreButton(
                                 scoreUiModel = score,
@@ -228,6 +225,10 @@ private fun PlayScreen(
                                     .height(40.dp)
                                     .weight(1f)
                             )
+                        }
+
+                        if (lower.size < 2) {
+                            Box(modifier = Modifier.weight(1f))
                         }
                     }
                 }
@@ -304,10 +305,10 @@ private fun PlayScreen(
             }
             val context = LocalContext.current
             ImageButton(
-                imageVector = ImageVector.vectorResource(R.drawable.img_roll_button_enable),
-                pressedImage = ImageVector.vectorResource(R.drawable.img_roll_button_pressed_enable),
-                disabledImage = ImageVector.vectorResource(R.drawable.img_roll_button_disable),
-                disabledPressedImage = ImageVector.vectorResource(R.drawable.img_roll_button_pressed_disable),
+                imageVector = ImageVector.vectorResource(drawable.img_roll_button_pressed_enable),
+                pressedImage = ImageVector.vectorResource(drawable.img_roll_button_pressed_enable),
+                disabledImage = ImageVector.vectorResource(drawable.img_roll_button_disable),
+                disabledPressedImage = ImageVector.vectorResource(drawable.img_roll_button_pressed_disable),
                 enabled = uiState.rollCount < 3,
                 onClick = {
                     if (uiState.dices.any { it.isHeld.not() } || uiState.dices.isEmpty()) {
