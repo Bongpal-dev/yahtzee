@@ -305,7 +305,7 @@ private fun PlayScreen(
             }
             val context = LocalContext.current
             ImageButton(
-                imageVector = ImageVector.vectorResource(drawable.img_roll_button_pressed_enable),
+                imageVector = ImageVector.vectorResource(drawable.img_roll_button_enable),
                 pressedImage = ImageVector.vectorResource(drawable.img_roll_button_pressed_enable),
                 disabledImage = ImageVector.vectorResource(drawable.img_roll_button_disable),
                 disabledPressedImage = ImageVector.vectorResource(drawable.img_roll_button_pressed_disable),
