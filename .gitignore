@@ -8,4 +8,6 @@
 /captures
 .externalNativeBuild
 .cxx
+yahtzee-time-release-key.jks
 local.properties
+gradle.properties
