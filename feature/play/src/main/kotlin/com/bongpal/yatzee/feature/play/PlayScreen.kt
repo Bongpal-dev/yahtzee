@@ -42,6 +42,7 @@ import com.bongpal.yatzee.feature.play.model.PlayIntent
 import com.bongpal.yatzee.feature.play.section.DiceSection
 import com.bongpal.yatzee.feature.play.section.ScoreSection
 import com.bongpal.yatzee.feature.play.state.PlayUiState
+import com.bongpal.yatzee.feature.play.state.ScorePopupState
 
 @Composable
 internal fun PlayRoute(
@@ -50,9 +51,7 @@ internal fun PlayRoute(
     viewModel: PlayViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var isShowScorePopup by remember { mutableStateOf(false) }
-    var longPressedScore by remember { mutableStateOf<ScoreCategory?>(null) }
-    var popUpOffset by remember { mutableStateOf(Offset(0f, 0f)) }
+    var scorePopupState by remember { mutableStateOf(ScorePopupState()) }
 
     LaunchedEffect(uiState.isEnd) {
         if (uiState.isEnd) {
@@ -64,25 +63,22 @@ internal fun PlayRoute(
         onAction = viewModel::onAction,
         uiState = uiState,
         showScorePopup = { score, offset ->
-            popUpOffset = offset
-            longPressedScore = score
-            isShowScorePopup = true
+            scorePopupState = ScorePopupState(
+                isVisible = true,
+                scoreCategory = score,
+                offset = offset
+            )
         },
-        hideScorePopup = {
-            longPressedScore = null
-            isShowScorePopup = false
-        },
+        hideScorePopup = { scorePopupState = scorePopupState.copy(isVisible = false) },
         paddingValues = paddingValues
     )
 
-    if (isShowScorePopup) {
-        val score = longPressedScore ?: return
-
+    if (scorePopupState.shouldShow) {
         ScoreInfoPopup(
-            score = score,
-            offset = popUpOffset,
-            scoreIcon = uiState.scoreInitialImages.getValue(score),
-            hideDialog = { isShowScorePopup = false },
+            score = scorePopupState.scoreCategory!!,
+            offset = scorePopupState.offset,
+            scoreIcon = uiState.scoreInitialImages.getValue(scorePopupState.scoreCategory!!),
+            hideDialog = { scorePopupState = scorePopupState.copy(isVisible = false) },
             modifier = Modifier.fillMaxWidth(0.85f)
         )
     }
@@ -198,7 +194,7 @@ private fun PlayScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "다시?",
+                    text = "재굴림",
                     style = Typography.labelSmall,
                 )
 
@@ -226,7 +222,9 @@ private fun PlayScreen(
                     }
                 }
             }
+
             val context = LocalContext.current
+
             ImageButton(
                 imageVector = ImageVector.vectorResource(drawable.img_roll_button_enable),
                 pressedImage = ImageVector.vectorResource(drawable.img_roll_button_pressed_enable),
