@@ -2,6 +2,7 @@ package com.bongpal.yatzee.feature.play
 
 import android.os.VibrationEffect
 import android.os.Vibrator
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,6 +38,7 @@ import com.bongpal.yatzee.core.designsystem.theme.LightGray
 import com.bongpal.yatzee.core.designsystem.theme.Typography
 import com.bongpal.yatzee.core.model.ScoreCategory
 import com.bongpal.yatzee.core.resource.R.drawable
+import com.bongpal.yatzee.feature.play.component.ConfirmGiveUpDialog
 import com.bongpal.yatzee.feature.play.component.ScoreInfoPopup
 import com.bongpal.yatzee.feature.play.model.PlayIntent
 import com.bongpal.yatzee.feature.play.section.DiceSection
@@ -52,6 +54,11 @@ internal fun PlayRoute(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var scorePopupState by remember { mutableStateOf(ScorePopupState()) }
+    var showGiveUpDialog by remember { mutableStateOf(false) }
+
+    BackHandler(enabled = uiState.isEnd.not() && scorePopupState.isVisible.not()) {
+        showGiveUpDialog = true
+    }
 
     LaunchedEffect(uiState.isEnd) {
         if (uiState.isEnd) {
@@ -80,6 +87,18 @@ internal fun PlayRoute(
             scoreIcon = uiState.scoreInitialImages.getValue(scorePopupState.scoreCategory!!),
             hideDialog = { scorePopupState = scorePopupState.copy(isVisible = false) },
             modifier = Modifier.fillMaxWidth(0.85f)
+        )
+    }
+
+    if (showGiveUpDialog) {
+        ConfirmGiveUpDialog(
+            onConfirm = {
+                showGiveUpDialog = false
+                viewModel.onAction(PlayIntent.GiveUp)
+            },
+            onDismiss = {
+                showGiveUpDialog = false
+            }
         )
     }
 }

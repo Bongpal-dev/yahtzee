@@ -58,6 +58,12 @@ internal class PlayViewModel @Inject constructor(
                 }
 
                 is PlayIntent.HoldDice -> _uiState.update { current -> reduce(current, intent) }
+
+                is PlayIntent.GiveUp -> _uiState.update { current -> reduce(current, intent) }
+            }
+
+            if (uiState.value.isEnd) {
+                saveGameRecord(uiState.value)
             }
         }
     }
@@ -78,6 +84,10 @@ internal class PlayViewModel @Inject constructor(
             }
 
             is PlayIntent.ClickScore -> handleScoreClick(state, intent.category)
+
+            is PlayIntent.GiveUp -> {
+                state.copy(isEnd = true)
+            }
         }
     }
 
@@ -95,9 +105,7 @@ internal class PlayViewModel @Inject constructor(
                 scoreState = newScores,
                 rollCount = 0,
                 isEnd = isEnd
-            ).also { uiState ->
-                if (isEnd) saveGameRecord(uiState)
-            }
+            )
         } else {
             state.copy(scoreState = state.scoreState.select(category))
         }
