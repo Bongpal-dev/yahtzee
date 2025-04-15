@@ -3,7 +3,6 @@ package com.bongpal.yatzee.core.data.repository
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.collection.LruCache
 import com.bongpal.yatzee.core.domain.repository.ImageCacheRepository
@@ -107,7 +106,6 @@ class DefaultImageCacheRepository @Inject constructor(
 
             scoreBitmapResId.forEach { resId ->
                 val key = "$resId"
-                Log.e("DefaultImageCacheRepository", "preLoadImage: $resId")
 
                 if (bitmapCache[key] == null) {
                     cacheImage(resId, key, (80 * density).toInt())

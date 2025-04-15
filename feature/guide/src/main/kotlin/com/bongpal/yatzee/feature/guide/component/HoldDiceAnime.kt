@@ -1,6 +1,5 @@
 package com.bongpal.yatzee.feature.guide.component
 
-import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -65,7 +64,6 @@ fun HoldDiceAnime(
     var isButtonPressed = remember { mutableStateOf(false) }
 
     LaunchedEffect(isDicesRoll) {
-        Log.w("guideAnimTest", "isDicesRoll: $isDicesRoll")
         while (true) {
             delay(400)
 

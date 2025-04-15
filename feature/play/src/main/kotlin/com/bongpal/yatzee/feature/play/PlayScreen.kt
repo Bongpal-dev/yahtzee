@@ -3,7 +3,6 @@ package com.bongpal.yatzee.feature.play
 import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,10 +10,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,7 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -41,10 +37,11 @@ import com.bongpal.yatzee.core.designsystem.theme.LightGray
 import com.bongpal.yatzee.core.designsystem.theme.Typography
 import com.bongpal.yatzee.core.model.ScoreCategory
 import com.bongpal.yatzee.core.resource.R.drawable
-import com.bongpal.yatzee.feature.play.component.DiceSection
-import com.bongpal.yatzee.feature.play.component.ScoreButton
 import com.bongpal.yatzee.feature.play.component.ScoreInfoPopup
 import com.bongpal.yatzee.feature.play.model.PlayIntent
+import com.bongpal.yatzee.feature.play.section.DiceSection
+import com.bongpal.yatzee.feature.play.section.ScoreSection
+import com.bongpal.yatzee.feature.play.state.PlayUiState
 
 @Composable
 internal fun PlayRoute(
@@ -59,7 +56,7 @@ internal fun PlayRoute(
 
     LaunchedEffect(uiState.isEnd) {
         if (uiState.isEnd) {
-            navigateToResult(uiState.finalScore)
+            navigateToResult(uiState.scoreState.finalScore)
         }
     }
 
@@ -110,50 +107,16 @@ private fun PlayScreen(
         Column(
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = Color.DarkGray, shape = RoundedCornerShape(6.dp))
-                    .padding(horizontal = 12.dp, vertical = 4.dp),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                Text(
-                    text = "상단 점수",
-                    style = Typography.titleLarge,
-                    color = Color.White,
-                )
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 12.dp, end = 12.dp, bottom = 4.dp, top = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                uiState.scoreUiModels.filter { it.isUpper() }.chunked(3).forEach { uppers ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        uppers.forEach { score ->
-                            ScoreButton(
-                                scoreUiModel = score,
-                                defaultImage = uiState.scoreInitialImages.getValue(score.category),
-                                handleScoreClick = { onAction(PlayIntent.ClickScore(it)) },
-                                showPopup = { showScorePopup(score.category, it) },
-                                hidePopup = hideScorePopup,
-                                rollingState = uiState.isRolling,
-                                modifier = Modifier
-                                    .height(40.dp)
-                                    .weight(1f)
-                            )
-                        }
-                    }
-                }
-            }
+            ScoreSection(
+                title = "상단 점수",
+                scores = uiState.scoreState.upper,
+                chunkSize = 3,
+                scoreImages = uiState.scoreInitialImages,
+                onClick = { onAction(PlayIntent.ClickScore(it)) },
+                showPopup = { s, o -> showScorePopup(s.category, o) },
+                hidePopup = hideScorePopup,
+                isRolling = uiState.isRolling,
+            )
 
             Row(
                 modifier = Modifier
@@ -169,70 +132,30 @@ private fun PlayScreen(
                 )
 
                 Text(
-                    text = "${uiState.upperScore} / 63",
+                    text = "${uiState.scoreState.upperScore} / 63",
                     style = Typography.labelSmall,
                     color = LightGray
                 )
 
                 Text(
-                    text = if (uiState.upperBonus) "+35" else "+0",
+                    text = if (uiState.scoreState.upperBonus) "+35" else "+0",
                     style = Typography.headlineMedium,
-                    color = if (uiState.upperBonus) ActivePink else DefaultBlack
-                )
-            }
-        }
-
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = Color.DarkGray, shape = RoundedCornerShape(6.dp))
-                    .padding(horizontal = 12.dp, vertical = 4.dp),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                Text(
-                    text = "하단 점수",
-                    style = Typography.titleLarge,
-                    color = Color.White
+                    color = if (uiState.scoreState.upperBonus) ActivePink else DefaultBlack
                 )
             }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 12.dp, end = 12.dp, top = 20.dp, bottom = 4.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                uiState.scoreUiModels.filter { it.isLower() }.chunked(2).forEach { lower ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        lower.forEach { score ->
-                            ScoreButton(
-                                scoreUiModel = score,
-                                defaultImage = uiState.scoreInitialImages.getValue(score.category),
-                                showPopup = { showScorePopup(score.category, it) },
-                                hidePopup = hideScorePopup,
-                                handleScoreClick = { onAction(PlayIntent.ClickScore(it)) },
-                                rollingState = uiState.isRolling,
-                                modifier = Modifier
-                                    .height(40.dp)
-                                    .weight(1f)
-                            )
-                        }
+            ScoreSection(
+                title = "하단 점수",
+                scores = uiState.scoreState.lower,
+                chunkSize = 2,
+                scoreImages = uiState.scoreInitialImages,
+                onClick = { onAction(PlayIntent.ClickScore(it)) },
+                showPopup = { s, o -> showScorePopup(s.category, o) },
+                hidePopup = hideScorePopup,
+                isRolling = uiState.isRolling,
+            )
 
-                        if (lower.size < 2) {
-                            Box(modifier = Modifier.weight(1f))
-                        }
-                    }
-                }
-            }
+
 
             Row(
                 modifier = Modifier
@@ -248,7 +171,7 @@ private fun PlayScreen(
                 )
 
                 Text(
-                    text = "${uiState.finalScore} 점",
+                    text = "${uiState.scoreState.finalScore} 점",
                     color = DefaultBlack,
                     style = Typography.headlineMedium,
                 )

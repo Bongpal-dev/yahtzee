@@ -1,6 +1,5 @@
 package com.bongpal.yatzee.feature.play
 
-import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bongpal.yatzee.core.domain.usecase.GetScoreImageUseCase
@@ -10,9 +9,9 @@ import com.bongpal.yatzee.core.model.ScoreCategory
 import com.bongpal.yatzee.core.model.toTier
 import com.bongpal.yatzee.feature.play.model.Dice
 import com.bongpal.yatzee.feature.play.model.PlayIntent
-import com.bongpal.yatzee.feature.play.model.ScoreUiModel
-import com.bongpal.yatzee.feature.play.model.toModel
-import com.bongpal.yatzee.feature.play.util.calculateScore
+import com.bongpal.yatzee.feature.play.model.rollDices
+import com.bongpal.yatzee.feature.play.model.toggleHold
+import com.bongpal.yatzee.feature.play.state.PlayUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,18 +19,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-data class PlayUiState(
-    val dices: List<Dice> = emptyList(),
-    val scoreInitialImages: Map<ScoreCategory, Bitmap> = emptyMap(),
-    val isRolling: Boolean = false,
-    val rollCount: Int = 0,
-    val upperScore: Int = 0,
-    val upperBonus: Boolean = false,
-    val scoreUiModels: List<ScoreUiModel> = ScoreCategory.entries.map { ScoreUiModel(it) },
-    val finalScore: Int = 0,
-    val isEnd: Boolean = false
-)
 
 @HiltViewModel
 class PlayViewModel @Inject constructor(
@@ -55,7 +42,7 @@ class PlayViewModel @Inject constructor(
 
                     _uiState.update { state ->
                         state.copy(
-                            scoreUiModels = state.scoreUiModels.map { it.copy(isSelected = false) },
+                            scoreState = state.scoreState.clearSelected(),
                             isRolling = true,
                             dices = state.dices.ifEmpty { List(5) { Dice() } }
                         )
@@ -64,7 +51,11 @@ class PlayViewModel @Inject constructor(
                     _uiState.update { current -> reduce(current, intent) }
                 }
 
-                is PlayIntent.ClickScore -> _uiState.update { current -> reduce(current, intent) }
+                is PlayIntent.ClickScore -> {
+                    if (uiState.value.dices.isEmpty() || uiState.value.isRolling) return@launch
+
+                    _uiState.update { current -> reduce(current, intent) }
+                }
 
                 is PlayIntent.HoldDice -> _uiState.update { current -> reduce(current, intent) }
             }
@@ -74,86 +65,41 @@ class PlayViewModel @Inject constructor(
     private fun reduce(state: PlayUiState, intent: PlayIntent): PlayUiState {
         return when (intent) {
             is PlayIntent.HoldDice -> state.copy(
-                dices = state.dices.mapIndexed { i, dice ->
-                    if (i == intent.index) dice.copy(isHeld = !dice.isHeld) else dice
-                }
+                dices = state.dices.toggleHold(intent.index)
             )
 
-            is PlayIntent.RollDice -> {
-                val dices =
-                    state.dices.map { dice -> if (dice.isHeld) dice else dice.copy(value = (1..6).random()) }
-
-                return state.copy(
-                    dices = dices,
+            is PlayIntent.RollDice -> state.dices.rollDices().let { new ->
+                state.copy(
+                    dices = new,
                     rollCount = state.rollCount + 1,
                     isRolling = false,
-                    scoreUiModels = updateScore(dices, state.scoreUiModels)
-
+                    scoreState = state.scoreState.updateScores(new)
                 )
             }
 
-            is PlayIntent.ClickScore -> handleScoreClick(state, intent.score)
+            is PlayIntent.ClickScore -> handleScoreClick(state, intent.category)
         }
     }
 
-    private fun handleScoreClick(state: PlayUiState, clicked: ScoreUiModel): PlayUiState {
-        if (state.dices.isEmpty() || clicked.isPicked) return state
+    private fun handleScoreClick(state: PlayUiState, category: ScoreCategory): PlayUiState {
+        val current = state.scoreState.find(category)
 
-        val current = state.scoreUiModels.first { it.category == clicked.category }
-        val isPickAction = current.isSelected && current.isPicked.not()
+        if (state.dices.isEmpty() || current.isPicked) return state
 
-        return if (isPickAction) {
-            val upperScore = state.upperScore + if (clicked.isUpper()) clicked.point else 0
-            val bonusGranted = upperScore >= 63 && state.upperBonus.not()
-            val bonus = if (bonusGranted) 35 else 0
-            val newScores = state.scoreUiModels.pickScore(clicked)
-            val isEnd = newScores.all { it.isPicked }
-            val finalScore = state.finalScore + clicked.point + bonus
+        return if (current.isSelected) {
+            val newScores = state.scoreState.pick(category)
+            val isEnd = newScores.isAllPicked()
 
             state.copy(
                 dices = emptyList(),
-                scoreUiModels = newScores,
+                scoreState = newScores,
                 rollCount = 0,
-                upperScore = upperScore,
-                upperBonus = state.upperBonus || bonusGranted,
-                finalScore = finalScore,
                 isEnd = isEnd
             ).also { uiState ->
                 if (isEnd) saveGameRecord(uiState)
             }
         } else {
-            state.copy(scoreUiModels = state.scoreUiModels.selectScore(clicked))
-        }
-    }
-
-    private fun List<ScoreUiModel>.selectScore(scoreUiModel: ScoreUiModel): List<ScoreUiModel> {
-        return this.map { s ->
-            if (s.category == scoreUiModel.category) {
-                s.copy(isSelected = true)
-            } else {
-                s.copy(isSelected = false)
-            }
-        }
-    }
-
-    private fun List<ScoreUiModel>.pickScore(scoreUiModel: ScoreUiModel): List<ScoreUiModel> {
-        return this.map { s ->
-            when {
-                s.category == scoreUiModel.category && s.isPicked.not() -> {
-                    s.copy(
-                        isPicked = true,
-                        isSelected = false
-                    )
-                }
-
-                s.isPicked -> {
-                    s.copy(isSelected = false)
-                }
-
-                else -> {
-                    s.copy(point = 0, isSelected = false)
-                }
-            }
+            state.copy(scoreState = state.scoreState.select(category))
         }
     }
 
@@ -161,23 +107,10 @@ class PlayViewModel @Inject constructor(
         viewModelScope.launch {
             saveGameRecordUseCase(
                 GameRecord(
-                    totalScore = playUiState.finalScore,
-                    scores = playUiState.scoreUiModels.map { it.toModel() },
-                    tier = playUiState.finalScore.toTier(),
+                    totalScore = playUiState.scoreState.finalScore,
+                    scores = playUiState.scoreState.toModelList(),
+                    tier = playUiState.scoreState.finalScore.toTier(),
                 )
-            )
-        }
-    }
-
-    private fun updateScore(
-        dices: List<Dice>,
-        currentScoreUiModel: List<ScoreUiModel>
-    ): List<ScoreUiModel> {
-        return currentScoreUiModel.map { score ->
-            if (score.isPicked) score.copy(isSelected = false) else score.copy(
-                point = score.category.calculateScore(
-                    dices
-                ), isSelected = false
             )
         }
     }

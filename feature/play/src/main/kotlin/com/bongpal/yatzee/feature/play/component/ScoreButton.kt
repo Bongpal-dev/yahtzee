@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.bongpal.yatzee.core.designsystem.theme.ActivePink
 import com.bongpal.yatzee.core.designsystem.theme.LightGray
 import com.bongpal.yatzee.core.designsystem.theme.Typography
+import com.bongpal.yatzee.core.model.ScoreCategory
 import com.bongpal.yatzee.feature.play.model.ScoreUiModel
 import com.bongpal.yatzee.feature.play.util.getScoreImage
 import kotlinx.coroutines.Job
@@ -36,7 +37,7 @@ import kotlinx.coroutines.launch
 internal fun ScoreButton(
     scoreUiModel: ScoreUiModel,
     defaultImage: Bitmap,
-    handleScoreClick: (ScoreUiModel) -> Unit = {},
+    handleScoreClick: (ScoreCategory) -> Unit = {},
     showPopup: (Offset) -> Unit = {},
     hidePopup: () -> Unit = {},
     rollingState: Boolean,
@@ -91,7 +92,7 @@ internal fun ScoreButton(
                                     isLongPress = false
                                     hidePopup()
                                 } else {
-                                    handleScoreClick(scoreUiModel)
+                                    handleScoreClick(scoreUiModel.category)
                                 }
                                 longPressJob?.cancel()
                                 longPressJob = null

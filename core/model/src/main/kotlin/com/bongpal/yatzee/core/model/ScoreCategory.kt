@@ -16,5 +16,8 @@ enum class ScoreCategory(val displayName: String, val description: String, val s
     YAHTZEE("야찌", "주사위 눈이 모두 같은 경우 50점", LOWER);
 }
 
+fun ScoreCategory.isUpper() = this.section == UPPER
+fun ScoreCategory.isLower() = this.section == LOWER
+
 const val UPPER = 0
 const val LOWER = 1

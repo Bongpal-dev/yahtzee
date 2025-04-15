@@ -1,4 +1,4 @@
-package com.bongpal.yatzee.feature.play.component
+package com.bongpal.yatzee.feature.play.section
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
