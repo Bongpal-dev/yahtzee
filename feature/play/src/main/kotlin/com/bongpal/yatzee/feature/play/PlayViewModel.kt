@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PlayViewModel @Inject constructor(
+internal class PlayViewModel @Inject constructor(
     getScoreImageUseCase: GetScoreImageUseCase,
     private val saveGameRecordUseCase: SaveGameRecordUseCase,
 ) : ViewModel() {

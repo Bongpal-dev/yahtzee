@@ -9,7 +9,7 @@ import com.bongpal.yatzee.core.resource.R
 import com.bongpal.yatzee.feature.play.model.ScoreUiModel
 
 @Composable
-fun ScoreUiModel.getScoreImage(): ImageVector {
+internal fun ScoreUiModel.getScoreImage(): ImageVector {
     return when (category) {
         ScoreCategory.ACES -> {
             this.getImageWithState(

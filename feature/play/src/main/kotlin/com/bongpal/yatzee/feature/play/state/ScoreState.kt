@@ -8,7 +8,7 @@ import com.bongpal.yatzee.feature.play.model.ScoreUiModel
 import com.bongpal.yatzee.feature.play.model.toModel
 import com.bongpal.yatzee.feature.play.model.updateScore
 
-data class ScoreState(
+internal data class ScoreState(
     val upper: List<ScoreUiModel> = ScoreCategory.entries
         .filter { it.isUpper() }
         .map { ScoreUiModel(it) },

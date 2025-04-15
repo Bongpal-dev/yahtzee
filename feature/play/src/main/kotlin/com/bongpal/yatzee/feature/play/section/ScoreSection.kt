@@ -23,7 +23,7 @@ import com.bongpal.yatzee.feature.play.component.ScoreButton
 import com.bongpal.yatzee.feature.play.model.ScoreUiModel
 
 @Composable
-fun ScoreSection(
+internal fun ScoreSection(
     title: String,
     scores: List<ScoreUiModel>,
     chunkSize: Int,
