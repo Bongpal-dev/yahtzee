@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.bongpal.yatzee.core.local.dao.GameRecordDao
 import com.bongpal.yatzee.core.local.entity.GameRecordEntity
 
-@Database(entities = [GameRecordEntity::class], version = 1)
+@Database(entities = [GameRecordEntity::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun gameRecordDao(): GameRecordDao
 }

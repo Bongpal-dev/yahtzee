@@ -10,6 +10,7 @@ fun GameRecord.toEntity(): GameRecordEntity {
     val scoreList = this.scores.associate { it.category to it.point }
 
     return GameRecordEntity(
+        recordId = this.id ?: "",
         player = this.player,
         totalScore = this.totalScore,
         aces = scoreList[ScoreCategory.ACES] ?: 0,
@@ -30,6 +31,7 @@ fun GameRecord.toEntity(): GameRecordEntity {
 
 fun GameRecordEntity.toModel(): GameRecord {
     return GameRecord(
+        id = this.recordId,
         player = this.player,
         totalScore = this.totalScore,
         tier = this.totalScore.toTier(),
