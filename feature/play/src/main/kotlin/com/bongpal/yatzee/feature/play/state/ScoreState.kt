@@ -37,9 +37,9 @@ internal data class ScoreState(
     }
 
     fun updateScores(dices: List<Dice>): ScoreState {
-        return ScoreState(
+        return this.copy(
             upper = upper.updateScore(dices),
-            lower = lower.updateScore(dices)
+            lower = lower.updateScore(dices),
         )
     }
 

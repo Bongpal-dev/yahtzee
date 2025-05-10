@@ -14,4 +14,7 @@ interface GameRecordDao {
 
     @Query("SELECT * FROM records ORDER BY totalScore DESC")
     fun getRecords(): PagingSource<Int, GameRecordEntity>
+
+    @Query("SELECT * FROM records WHERE recordId = :id")
+    suspend fun getRecordDetailById(id: String): GameRecordEntity
 }

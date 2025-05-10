@@ -16,5 +16,8 @@ sealed interface Route {
     data class ScoreBoard(val currentScore: Int?) : Route
 
     @Serializable
+    data class ScoreDetail(val recordId: String) : Route
+
+    @Serializable
     data object Guide : Route
 }

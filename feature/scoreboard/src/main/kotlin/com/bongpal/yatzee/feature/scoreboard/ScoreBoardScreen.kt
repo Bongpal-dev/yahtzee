@@ -3,6 +3,7 @@ package com.bongpal.yatzee.feature.scoreboard
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,6 +45,7 @@ import com.bongpal.yatzee.core.ui.model.toUiModel
 @Composable
 internal fun ScoreBoardRoute(
     navigateToHome: () -> Unit,
+    navigateToScoreDetail: (String) -> Unit,
     popBackStack: () -> Unit,
     paddingValues: PaddingValues,
     viewModel: ScoreBoardViewModel = hiltViewModel(),
@@ -52,6 +54,8 @@ internal fun ScoreBoardRoute(
     val gameRecords = viewModel.gameRecords.collectAsLazyPagingItems()
 
     ScoreBoardScreen(
+        navigateToHome = navigateToHome,
+        navigateToScoreDetail = navigateToScoreDetail,
         currentScore = uiState.currentScore,
         popBackStack = popBackStack,
         gameRecords = gameRecords,
@@ -62,6 +66,8 @@ internal fun ScoreBoardRoute(
 
 @Composable
 private fun ScoreBoardScreen(
+    navigateToHome: () -> Unit = {},
+    navigateToScoreDetail: (String) -> Unit = {},
     currentScore: Int? = null,
     popBackStack: () -> Unit = {},
     gameRecords: LazyPagingItems<GameRecord>,
@@ -128,6 +134,11 @@ private fun ScoreBoardScreen(
                             .background(
                                 color = if (i == currentRecordIndex) ActivePink else Color.Transparent,
                                 shape = RoundedCornerShape(10.dp)
+                            )
+                            .clickable(
+                                onClick = { navigateToScoreDetail(gameRecords[i]?.id.orEmpty()) },
+                                interactionSource = null,
+                                indication = null
                             )
                             .padding(horizontal = 12.dp),
                         horizontalArrangement = Arrangement.spacedBy(16.dp),

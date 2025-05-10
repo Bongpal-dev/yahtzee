@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -115,6 +116,7 @@ internal class PlayViewModel @Inject constructor(
         viewModelScope.launch {
             saveGameRecordUseCase(
                 GameRecord(
+                    id = UUID.randomUUID().toString(),
                     totalScore = playUiState.scoreState.finalScore,
                     scores = playUiState.scoreState.toModelList(),
                     tier = playUiState.scoreState.finalScore.toTier(),

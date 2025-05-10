@@ -27,4 +27,8 @@ class DefaultGameRecordRepository @Inject constructor(
     override suspend fun saveRecord(gameRecord: GameRecord) {
         localGameRecordDataSource.insertRecord(gameRecord)
     }
+
+    override suspend fun getRecordDetailById(id: String): GameRecord {
+        return localGameRecordDataSource.getRecordDetailById(id)
+    }
 }

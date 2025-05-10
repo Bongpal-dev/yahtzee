@@ -51,7 +51,8 @@ internal fun MainNavHost(
             scoreBoardNavGraph(
                 navigateToHome = navigator::navigateHome,
                 popBackStack = navigator.navController::popBackStack,
-                paddingValues = paddingValues
+                paddingValues = paddingValues,
+                navigateToScoreDetail = navigator::navigateScoreDetail
             )
 
             guideNavGraph(

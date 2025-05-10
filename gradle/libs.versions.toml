@@ -39,15 +39,17 @@ hilt = "2.54"
 # https://developer.android.com/jetpack/androidx/releases/hilt
 hiltNavigationCompose = "1.2.0"
 
-## Coroutine
-# https://github.com/Kotlin/kotlinx.coroutines
-coroutine = "1.10.1"
+
 appcompat = "1.7.0"
 material = "1.12.0"
 
 ## Room
 # https://developer.android.com/training/data-storage/room?hl=ko
 room = "2.6.1"
+
+## Coroutine
+# https://github.com/Kotlin/kotlinx.coroutines
+coroutine = "1.10.1"
 
 ## Paging3
 # https://developer.android.com/jetpack/androidx/releases/paging

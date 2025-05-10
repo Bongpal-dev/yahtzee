@@ -7,4 +7,5 @@ import com.bongpal.yatzee.core.model.GameRecord
 interface LocalGameRecordDataSource {
     suspend fun insertRecord(gameRecord: GameRecord)
     fun getRecords(): PagingSource<Int, GameRecordEntity>
+    suspend fun getRecordDetailById(id: String): GameRecord
 }

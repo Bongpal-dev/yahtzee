@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface GameRecordRepository {
     fun getRecords(): Flow<PagingData<GameRecord>>
     suspend fun saveRecord(gameRecord: GameRecord)
+    suspend fun getRecordDetailById(id: String): GameRecord
 }

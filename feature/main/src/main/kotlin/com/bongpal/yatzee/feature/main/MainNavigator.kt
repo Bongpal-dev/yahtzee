@@ -40,6 +40,10 @@ internal class MainNavigator(
         navController.navigateScoreBoard(currentScore)
     }
 
+    fun navigateScoreDetail(recordId: String) {
+        navController.navigate(Route.ScoreDetail(recordId))
+    }
+
     fun navigateResult(finalScore: Int) {
         navController.navigateResult(finalScore, navOptions)
     }
